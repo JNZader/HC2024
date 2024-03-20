@@ -15,7 +15,6 @@ import java.util.Set;
 import lombok.*;
 import todocode.hackacode.model.TipoPaquete;
 
-
 @Entity
 @Table(name = "Paquetes")
 @Data

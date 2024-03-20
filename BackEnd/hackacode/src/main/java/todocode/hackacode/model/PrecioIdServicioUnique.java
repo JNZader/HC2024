@@ -17,15 +17,14 @@ import java.util.Map;
 import org.springframework.web.servlet.HandlerMapping;
 import todocode.hackacode.service.impl.PrecioServiceImpl;
 
-
 /**
  * Validate that the id value isn't taken yet.
  */
-@Target({ FIELD, METHOD, ANNOTATION_TYPE })
+@Target({FIELD, METHOD, ANNOTATION_TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Constraint(
-      validatedBy = PrecioIdServicioUnique.PrecioIdServicioUniqueValidator.class
+        validatedBy = PrecioIdServicioUnique.PrecioIdServicioUniqueValidator.class
 )
 public @interface PrecioIdServicioUnique {
 
@@ -41,7 +40,7 @@ public @interface PrecioIdServicioUnique {
         private final HttpServletRequest request;
 
         public PrecioIdServicioUniqueValidator(final PrecioServiceImpl precioServiceImpl,
-                                               final HttpServletRequest request) {
+                final HttpServletRequest request) {
             this.precioServiceImpl = precioServiceImpl;
             this.request = request;
         }
@@ -52,10 +51,11 @@ public @interface PrecioIdServicioUnique {
                 // no value present
                 return true;
             }
-            @SuppressWarnings("unchecked") final Map<String, String> pathVariables =
-                  ((Map<String, String>)request.getAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE));
+            @SuppressWarnings("unchecked")
+            final Map<String, String> pathVariables
+                    = ((Map<String, String>) request.getAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE));
             final String currentId = pathVariables.get("id");
-            if (currentId != null && value.equals(precioServiceImpl.get(Long.parseLong(currentId)).getIdServicio())) {
+            if (currentId != null && value.equals(precioServiceImpl.get(Long.getLong(currentId)))) {
                 // value hasn't changed
                 return true;
             }

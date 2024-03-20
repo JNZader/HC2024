@@ -13,7 +13,6 @@ import todocode.hackacode.util.ReferencedWarning;
 
 import java.util.List;
 
-
 @Service
 public class ClienteServiceImpl implements ClienteService {
 
@@ -21,10 +20,11 @@ public class ClienteServiceImpl implements ClienteService {
     private final VentaRepository ventaRepository;
 
     public ClienteServiceImpl(final ClienteRepository clienteRepository,
-                              final VentaRepository ventaRepository) {
+            final VentaRepository ventaRepository) {
         this.clienteRepository = clienteRepository;
         this.ventaRepository = ventaRepository;
     }
+
     @Override
     public List<ClienteDTO> findAll() {
         final List<Cliente> clientes = clienteRepository.findAll(Sort.by("id"));
@@ -32,18 +32,21 @@ public class ClienteServiceImpl implements ClienteService {
                 .map(cliente -> mapToDTO(cliente, new ClienteDTO()))
                 .toList();
     }
+
     @Override
     public ClienteDTO get(final Long id) {
         return clienteRepository.findById(id)
                 .map(cliente -> mapToDTO(cliente, new ClienteDTO()))
                 .orElseThrow(NotFoundException::new);
     }
+
     @Override
     public Long create(final ClienteDTO clienteDTO) {
         final Cliente cliente = new Cliente();
         mapToEntity(clienteDTO, cliente);
         return clienteRepository.save(cliente).getId();
     }
+
     @Override
     public void update(final Long id, final ClienteDTO clienteDTO) {
         final Cliente cliente = clienteRepository.findById(id)
@@ -51,6 +54,7 @@ public class ClienteServiceImpl implements ClienteService {
         mapToEntity(clienteDTO, cliente);
         clienteRepository.save(cliente);
     }
+
     @Override
     public void delete(final Long id) {
         clienteRepository.deleteById(id);

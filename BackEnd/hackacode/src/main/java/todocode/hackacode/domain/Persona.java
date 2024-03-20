@@ -7,7 +7,6 @@ import java.time.LocalDate;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
-
 @MappedSuperclass
 @Data
 @NoArgsConstructor

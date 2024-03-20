@@ -22,7 +22,6 @@ import todocode.hackacode.service.impl.ClienteServiceImpl;
 import todocode.hackacode.util.ReferencedException;
 import todocode.hackacode.util.ReferencedWarning;
 
-
 @RestController
 @RequestMapping(value = "/api/clientes", produces = MediaType.APPLICATION_JSON_VALUE)
 public class ClienteResource {
@@ -55,7 +54,7 @@ public class ClienteResource {
 
     @PutMapping("/{id}")
     public ResponseEntity<Long> updateCliente(@PathVariable(name = "id") final Long id,
-                                              @RequestBody @Valid final ClienteDTO clienteDTO) {
+            @RequestBody @Valid final ClienteDTO clienteDTO) {
         clienteServiceImpl.update(id, clienteDTO);
         return ResponseEntity.ok(id);
     }
@@ -73,7 +72,7 @@ public class ClienteResource {
 
     @GetMapping("/buscar")
     public ResponseEntity<?> buscar(@RequestParam String atributo, @RequestParam String valor,
-                                    @RequestParam(required = false) String operador) {
+            @RequestParam(required = false) String operador) {
 
         // Validación de atributos
         boolean atributoValido = false;
@@ -99,14 +98,11 @@ public class ClienteResource {
 
         if (operador != null) {
             switch (operador.toLowerCase()) {
-                case "igual":
-                    predicate = criteriaBuilder.equal(root.get(atributo), valorConvertido);
-                    break;
-                case "like":
-                    predicate = criteriaBuilder.like(root.get(atributo), "%" + valor + "%");
-                    break;
-                default:
+                case "igual" -> predicate = criteriaBuilder.equal(root.get(atributo), valorConvertido);
+                case "like" -> predicate = criteriaBuilder.like(root.get(atributo), "%" + valor + "%");
+                default -> {
                     return ResponseEntity.badRequest().body("Operador no válido: " + operador);
+                }
             }
         } else {
             predicate = criteriaBuilder.equal(root.get(atributo), valorConvertido);

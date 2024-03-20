@@ -23,7 +23,6 @@ import todocode.hackacode.service.impl.ServicioServiceImpl;
 import todocode.hackacode.util.ReferencedException;
 import todocode.hackacode.util.ReferencedWarning;
 
-
 @RestController
 @RequestMapping(value = "/api/servicios", produces = MediaType.APPLICATION_JSON_VALUE)
 public class ServicioResource {
@@ -56,7 +55,7 @@ public class ServicioResource {
 
     @PutMapping("/{id}")
     public ResponseEntity<Long> updateServicio(@PathVariable(name = "id") final Long id,
-                                               @RequestBody @Valid final ServicioDTO servicioDTO) {
+            @RequestBody @Valid final ServicioDTO servicioDTO) {
         servicioServiceImpl.update(id, servicioDTO);
         return ResponseEntity.ok(id);
     }
@@ -74,7 +73,7 @@ public class ServicioResource {
 
     @GetMapping("/buscar")
     public ResponseEntity<?> buscar(@RequestParam String atributo, @RequestParam String valor,
-                                    @RequestParam(required = false) String operador) {
+            @RequestParam(required = false) String operador) {
 
         // Validación de atributos
         boolean atributoValido = false;
@@ -92,11 +91,16 @@ public class ServicioResource {
         Object valorConvertido = null;
         try {
             valorConvertido = switch (Servicio.class.getDeclaredField(atributo).getType().getName()) {
-                case "java.lang.Integer" -> Integer.parseInt(valor);
-                case "java.lang.Double" -> Double.parseDouble(valor);
-                case "java.time.LocalDate" -> LocalDate.parse(valor);
-                case "java.lang.Boolean" -> Boolean.parseBoolean(valor);
-                default -> valor;
+                case "java.lang.Integer" ->
+                    Integer.parseInt(valor);
+                case "java.lang.Double" ->
+                    Double.parseDouble(valor);
+                case "java.time.LocalDate" ->
+                    LocalDate.parse(valor);
+                case "java.lang.Boolean" ->
+                    Boolean.parseBoolean(valor);
+                default ->
+                    valor;
             };
         } catch (NoSuchFieldException | NumberFormatException e) {
             return ResponseEntity.badRequest().body("Error al convertir el valor: " + valor);
@@ -110,20 +114,13 @@ public class ServicioResource {
 
         if (operador != null) {
             switch (operador.toLowerCase()) {
-                case "mayor":
-                    predicate = criteriaBuilder.greaterThan(root.get(atributo), valorConvertido.toString());
-                    break;
-                case "menor":
-                    predicate = criteriaBuilder.lessThan(root.get(atributo), valorConvertido.toString());
-                    break;
-                case "igual":
-                    predicate = criteriaBuilder.equal(root.get(atributo), valorConvertido);
-                    break;
-                case "like":
-                    predicate = criteriaBuilder.like(root.get(atributo), "%" + valorConvertido + "%");
-                    break;
-                default:
+                case "mayor" -> predicate = criteriaBuilder.greaterThan(root.get(atributo), valorConvertido.toString());
+                case "menor" -> predicate = criteriaBuilder.lessThan(root.get(atributo), valorConvertido.toString());
+                case "igual" -> predicate = criteriaBuilder.equal(root.get(atributo), valorConvertido);
+                case "like" -> predicate = criteriaBuilder.like(root.get(atributo), "%" + valorConvertido + "%");
+                default -> {
                     return ResponseEntity.badRequest().body("Operador no válido: " + operador);
+                }
             }
         } else {
             predicate = criteriaBuilder.equal(root.get(atributo), valorConvertido);
@@ -134,6 +131,5 @@ public class ServicioResource {
         List<Servicio> resultados = entityManager.createQuery(criteriaQuery).getResultList();
         return ResponseEntity.ok(resultados);
     }
-
 
 }

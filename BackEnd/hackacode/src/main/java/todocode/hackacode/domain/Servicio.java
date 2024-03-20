@@ -6,7 +6,6 @@ import java.time.LocalDate;
 
 import lombok.*;
 
-
 @Entity
 @Table(name = "Servicios")
 @Data
@@ -41,5 +40,17 @@ public class Servicio {
 
     @OneToOne(mappedBy = "idServicio", fetch = FetchType.LAZY)
     private Precio precioVenta;
+
+    public Paquete getPaqueteid() {
+
+        return this.paqueteid;
+
+    }
+
+    public Object getPrecioVenta() {
+
+        return this.precioVenta;
+
+    }
 
 }
