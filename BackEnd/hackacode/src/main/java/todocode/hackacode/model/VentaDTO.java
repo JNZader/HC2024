@@ -3,12 +3,9 @@ package todocode.hackacode.model;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.List;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
-
-@Getter
-@Setter
+@Data
 public class VentaDTO {
 
     private Long id;

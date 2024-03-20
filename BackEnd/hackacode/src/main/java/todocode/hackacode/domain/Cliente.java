@@ -12,7 +12,6 @@ import java.util.Set;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
-
 @Entity
 @Table(name = "Clientes")
 @Data
@@ -35,4 +34,3 @@ public class Cliente extends Persona {
     private Set<Venta> ventas;
 
 }
-

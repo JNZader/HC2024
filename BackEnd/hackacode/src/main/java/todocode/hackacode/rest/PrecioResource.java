@@ -20,7 +20,6 @@ import todocode.hackacode.domain.Precio;
 import todocode.hackacode.model.PrecioDTO;
 import todocode.hackacode.service.impl.PrecioServiceImpl;
 
-
 @RestController
 @RequestMapping(value = "/api/precios", produces = MediaType.APPLICATION_JSON_VALUE)
 public class PrecioResource {
@@ -53,7 +52,7 @@ public class PrecioResource {
 
     @PutMapping("/{id}")
     public ResponseEntity<Long> updatePrecio(@PathVariable(name = "id") final Long id,
-                                             @RequestBody @Valid final PrecioDTO precioDTO) {
+            @RequestBody @Valid final PrecioDTO precioDTO) {
         precioServiceImpl.update(id, precioDTO);
         return ResponseEntity.ok(id);
     }
@@ -67,7 +66,7 @@ public class PrecioResource {
 
     @GetMapping("/buscar")
     public ResponseEntity<?> buscar(@RequestParam String atributo, @RequestParam String valor,
-                                    @RequestParam(required = false) String operador) {
+            @RequestParam(required = false) String operador) {
 
         // Validación de atributos
         boolean atributoValido = false;
@@ -85,9 +84,12 @@ public class PrecioResource {
         Object valorConvertido = null;
         try {
             valorConvertido = switch (Precio.class.getDeclaredField(atributo).getType().getName()) {
-                case "java.lang.Long" -> Long.parseLong(valor);
-                case "java.lang.Double" -> Double.parseDouble(valor);
-                default -> valor;
+                case "java.lang.Long" ->
+                    Long.parseLong(valor);
+                case "java.lang.Double" ->
+                    Double.parseDouble(valor);
+                default ->
+                    valor;
             };
         } catch (NoSuchFieldException | NumberFormatException e) {
             return ResponseEntity.badRequest().body("Error al convertir el valor: " + valor);
@@ -101,17 +103,12 @@ public class PrecioResource {
 
         if (operador != null) {
             switch (operador.toLowerCase()) {
-                case "mayor":
-                    predicate = criteriaBuilder.greaterThan(root.get(atributo),valorConvertido.toString());
-                    break;
-                case "menor":
-                    predicate = criteriaBuilder.lessThan(root.get(atributo),valorConvertido.toString());
-                    break;
-                case "igual":
-                    predicate = criteriaBuilder.equal(root.get(atributo), valorConvertido);
-                    break;
-                default:
+                case "mayor" -> predicate = criteriaBuilder.greaterThan(root.get(atributo), valorConvertido.toString());
+                case "menor" -> predicate = criteriaBuilder.lessThan(root.get(atributo), valorConvertido.toString());
+                case "igual" -> predicate = criteriaBuilder.equal(root.get(atributo), valorConvertido);
+                default -> {
                     return ResponseEntity.badRequest().body("Operador no válido: " + operador);
+                }
             }
         } else {
             predicate = criteriaBuilder.equal(root.get(atributo), valorConvertido);

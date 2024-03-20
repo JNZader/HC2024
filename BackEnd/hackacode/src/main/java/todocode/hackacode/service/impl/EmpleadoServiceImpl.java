@@ -13,7 +13,6 @@ import todocode.hackacode.util.ReferencedWarning;
 
 import java.util.List;
 
-
 @Service
 public class EmpleadoServiceImpl implements EmpleadoService {
 
@@ -21,10 +20,11 @@ public class EmpleadoServiceImpl implements EmpleadoService {
     private final VentaRepository ventaRepository;
 
     public EmpleadoServiceImpl(final EmpleadoRepository empleadoRepository,
-                               final VentaRepository ventaRepository) {
+            final VentaRepository ventaRepository) {
         this.empleadoRepository = empleadoRepository;
         this.ventaRepository = ventaRepository;
     }
+
     @Override
     public List<EmpleadoDTO> findAll() {
         final List<Empleado> empleadoes = empleadoRepository.findAll(Sort.by("id"));
@@ -32,18 +32,21 @@ public class EmpleadoServiceImpl implements EmpleadoService {
                 .map(empleado -> mapToDTO(empleado, new EmpleadoDTO()))
                 .toList();
     }
+
     @Override
     public EmpleadoDTO get(final Long id) {
         return empleadoRepository.findById(id)
                 .map(empleado -> mapToDTO(empleado, new EmpleadoDTO()))
                 .orElseThrow(NotFoundException::new);
     }
+
     @Override
     public Long create(final EmpleadoDTO empleadoDTO) {
         final Empleado empleado = new Empleado();
         mapToEntity(empleadoDTO, empleado);
         return empleadoRepository.save(empleado).getId();
     }
+
     @Override
     public void update(final Long id, final EmpleadoDTO empleadoDTO) {
         final Empleado empleado = empleadoRepository.findById(id)
@@ -51,6 +54,7 @@ public class EmpleadoServiceImpl implements EmpleadoService {
         mapToEntity(empleadoDTO, empleado);
         empleadoRepository.save(empleado);
     }
+
     @Override
     public void delete(final Long id) {
         empleadoRepository.deleteById(id);
