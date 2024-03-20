@@ -1,0 +1,20 @@
+<div class="d-flex flex-wrap mb-4">
+    <h1 class="flex-grow-1" i18n="@@empleado.add.headline">Add Empleado</h1>
+    <div>
+        <a routerLink="/empleados" class="btn btn-secondary" i18n="@@empleado.add.back">Back to list</a>
+    </div>
+</div>
+<form [formGroup]="addForm" (ngSubmit)="handleSubmit()">
+    <app-input-row [group]="addForm" field="nombre" i18n-label="@@empleado.nombre.label" label="Nombre" />
+    <app-input-row [group]="addForm" field="apellido" i18n-label="@@empleado.apellido.label" label="Apellido" />
+    <app-input-row [group]="addForm" field="direccion" i18n-label="@@empleado.direccion.label" label="Direccion" />
+    <app-input-row [group]="addForm" field="dni" i18n-label="@@empleado.dni.label" label="Dni" />
+    <app-input-row [group]="addForm" field="fechaNacimiento" datepicker="datepicker" i18n-label="@@empleado.fechaNacimiento.label" label="Fecha Nacimiento" />
+    <app-input-row [group]="addForm" field="nacionalidad" i18n-label="@@empleado.nacionalidad.label" label="Nacionalidad" />
+    <app-input-row [group]="addForm" field="celular" i18n-label="@@empleado.celular.label" label="Celular" />
+    <app-input-row [group]="addForm" field="email" i18n-label="@@empleado.email.label" label="Email" />
+    <app-input-row [group]="addForm" field="cargo" rowType="radio" [options]="{'ADMIN': 'ADMIN', 'VENTAS': 'VENTAS'}" i18n-label="@@empleado.cargo.label" label="Cargo" />
+    <app-input-row [group]="addForm" field="sueldo" i18n-label="@@empleado.sueldo.label" label="Sueldo" />
+    <app-input-row [group]="addForm" field="estado" rowType="checkbox" i18n-label="@@empleado.estado.label" label="Estado" />
+    <input type="submit" i18n-value="@@empleado.add.headline" value="Add Empleado" class="btn btn-primary mt-4" />
+</form>

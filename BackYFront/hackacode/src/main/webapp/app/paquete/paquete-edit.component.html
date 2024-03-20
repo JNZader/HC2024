@@ -1,0 +1,16 @@
+<div class="d-flex flex-wrap mb-4">
+    <h1 class="flex-grow-1" i18n="@@paquete.edit.headline">Edit Paquete</h1>
+    <div>
+        <a routerLink="/paquetes" class="btn btn-secondary" i18n="@@paquete.edit.back">Back to list</a>
+    </div>
+</div>
+<form [formGroup]="editForm" (ngSubmit)="handleSubmit()">
+    <app-input-row [group]="editForm" field="id" rowType="number" i18n-label="@@paquete.id.label" label="Id" />
+    <app-input-row [group]="editForm" field="tipo" rowType="radio" [options]="{'COMBO': 'COMBO', 'PERSONALIZADO': 'PERSONALIZADO'}" i18n-label="@@paquete.tipo.label" label="Tipo" />
+    <app-input-row [group]="editForm" field="nombre" i18n-label="@@paquete.nombre.label" label="Nombre" />
+    <app-input-row [group]="editForm" field="descripcionBreve" i18n-label="@@paquete.descripcionBreve.label" label="Descripcion Breve" />
+    <app-input-row [group]="editForm" field="precioVenta" i18n-label="@@paquete.precioVenta.label" label="Precio Venta" />
+    <app-input-row [group]="editForm" field="duracion" rowType="number" i18n-label="@@paquete.duracion.label" label="Duracion" />
+    <app-input-row [group]="editForm" field="estado" rowType="checkbox" i18n-label="@@paquete.estado.label" label="Estado" />
+    <input type="submit" i18n-value="@@paquete.edit.headline" value="Edit Paquete" class="btn btn-primary mt-4" />
+</form>

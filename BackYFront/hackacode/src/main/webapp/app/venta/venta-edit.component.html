@@ -1,0 +1,17 @@
+<div class="d-flex flex-wrap mb-4">
+    <h1 class="flex-grow-1" i18n="@@venta.edit.headline">Edit Venta</h1>
+    <div>
+        <a routerLink="/ventas" class="btn btn-secondary" i18n="@@venta.edit.back">Back to list</a>
+    </div>
+</div>
+<form [formGroup]="editForm" (ngSubmit)="handleSubmit()">
+    <app-input-row [group]="editForm" field="id" rowType="number" i18n-label="@@venta.id.label" label="Id" />
+    <app-input-row [group]="editForm" field="medioPago" rowType="select" [options]="{'EFECTIVO': 'EFECTIVO', 'DEBITO': 'DEBITO', 'CREDITO': 'CREDITO', 'MONEDEROVIRTUAL': 'MONEDEROVIRTUAL', 'TRANSFERENCIA': 'TRANSFERENCIA'}" i18n-label="@@venta.medioPago.label" label="Medio Pago" />
+    <app-input-row [group]="editForm" field="monto" i18n-label="@@venta.monto.label" label="Monto" />
+    <app-input-row [group]="editForm" field="fecha" datepicker="datepicker" i18n-label="@@venta.fecha.label" label="Fecha" />
+    <app-input-row [group]="editForm" field="estado" rowType="checkbox" i18n-label="@@venta.estado.label" label="Estado" />
+    <app-input-row [group]="editForm" field="clienteId" rowType="select" [options]="clienteIdValues" i18n-label="@@venta.clienteId.label" label="Cliente Id" />
+    <app-input-row [group]="editForm" field="empleadoid" rowType="select" [options]="empleadoidValues" i18n-label="@@venta.empleadoid.label" label="Empleadoid" />
+    <app-input-row [group]="editForm" field="paquetes" rowType="multiselect" [options]="paquetesValues" i18n-label="@@venta.paquetes.label" label="Paquetes" />
+    <input type="submit" i18n-value="@@venta.edit.headline" value="Edit Venta" class="btn btn-primary mt-4" />
+</form>

@@ -1,0 +1,41 @@
+<div class="d-flex flex-wrap mb-4">
+    <h1 class="flex-grow-1" i18n="@@precio.list.headline">Precios</h1>
+    <div>
+        <a routerLink="/precios/add" class="btn btn-primary ms-2" i18n="@@precio.list.createNew">Create new Precio</a>
+    </div>
+</div>
+@if (!precios || precios.length === 0) {
+<div i18n="@@precio.list.empty">No Precios could be found.</div>
+} @else {
+<div class="table-responsive">
+    <table class="table table-striped table-hover align-middle">
+        <thead>
+            <tr>
+                <th scope="col" i18n="@@precio.id.label">Id</th>
+                <th scope="col" i18n="@@precio.idServico.label">Id Servico</th>
+                <th scope="col" i18n="@@precio.costo.label">Costo</th>
+                <th scope="col" i18n="@@precio.precioVenta.label">Precio Venta</th>
+                <th scope="col" i18n="@@precio.idServicio.label">Id Servicio</th>
+                <th><!-- --></th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (precio of precios; track precio.id) {
+            <tr>
+                <td>{{ precio.id }}</td>
+                <td>{{ precio.idServico }}</td>
+                <td>{{ precio.costo }}</td>
+                <td>{{ precio.precioVenta }}</td>
+                <td>{{ precio.idServicio }}</td>
+                <td>
+                    <div class="float-end text-nowrap">
+                        <a [routerLink]="['/precios/edit', precio.id]" class="btn btn-sm btn-secondary" i18n="@@precio.list.edit">Edit</a>
+                        <button type="button" (click)="confirmDelete(precio.id!)" class="btn btn-sm btn-secondary" i18n="@@precio.list.delete">Delete</button>
+                    </div>
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>
+}

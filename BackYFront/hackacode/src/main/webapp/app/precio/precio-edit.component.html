@@ -1,0 +1,14 @@
+<div class="d-flex flex-wrap mb-4">
+    <h1 class="flex-grow-1" i18n="@@precio.edit.headline">Edit Precio</h1>
+    <div>
+        <a routerLink="/precios" class="btn btn-secondary" i18n="@@precio.edit.back">Back to list</a>
+    </div>
+</div>
+<form [formGroup]="editForm" (ngSubmit)="handleSubmit()">
+    <app-input-row [group]="editForm" field="id" rowType="number" i18n-label="@@precio.id.label" label="Id" />
+    <app-input-row [group]="editForm" field="idServico" rowType="number" i18n-label="@@precio.idServico.label" label="Id Servico" />
+    <app-input-row [group]="editForm" field="costo" i18n-label="@@precio.costo.label" label="Costo" />
+    <app-input-row [group]="editForm" field="precioVenta" i18n-label="@@precio.precioVenta.label" label="Precio Venta" />
+    <app-input-row [group]="editForm" field="idServicio" rowType="select" [options]="idServicioValues" i18n-label="@@precio.idServicio.label" label="Id Servicio" />
+    <input type="submit" i18n-value="@@precio.edit.headline" value="Edit Precio" class="btn btn-primary mt-4" />
+</form>

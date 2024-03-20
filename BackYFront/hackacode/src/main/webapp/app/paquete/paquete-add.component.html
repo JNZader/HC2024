@@ -1,0 +1,15 @@
+<div class="d-flex flex-wrap mb-4">
+    <h1 class="flex-grow-1" i18n="@@paquete.add.headline">Add Paquete</h1>
+    <div>
+        <a routerLink="/paquetes" class="btn btn-secondary" i18n="@@paquete.add.back">Back to list</a>
+    </div>
+</div>
+<form [formGroup]="addForm" (ngSubmit)="handleSubmit()">
+    <app-input-row [group]="addForm" field="tipo" rowType="radio" [options]="{'COMBO': 'COMBO', 'PERSONALIZADO': 'PERSONALIZADO'}" i18n-label="@@paquete.tipo.label" label="Tipo" />
+    <app-input-row [group]="addForm" field="nombre" i18n-label="@@paquete.nombre.label" label="Nombre" />
+    <app-input-row [group]="addForm" field="descripcionBreve" i18n-label="@@paquete.descripcionBreve.label" label="Descripcion Breve" />
+    <app-input-row [group]="addForm" field="precioVenta" i18n-label="@@paquete.precioVenta.label" label="Precio Venta" />
+    <app-input-row [group]="addForm" field="duracion" rowType="number" i18n-label="@@paquete.duracion.label" label="Duracion" />
+    <app-input-row [group]="addForm" field="estado" rowType="checkbox" i18n-label="@@paquete.estado.label" label="Estado" />
+    <input type="submit" i18n-value="@@paquete.add.headline" value="Add Paquete" class="btn btn-primary mt-4" />
+</form>

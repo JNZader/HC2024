@@ -1,0 +1,136 @@
+package todocode.hackacode.rest;
+
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
+import jakarta.validation.Valid;
+
+import java.lang.reflect.Field;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import todocode.hackacode.domain.Empleado;
+import todocode.hackacode.model.EmpleadoDTO;
+import todocode.hackacode.service.impl.EmpleadoServiceImpl;
+import todocode.hackacode.util.ReferencedException;
+import todocode.hackacode.util.ReferencedWarning;
+
+
+@RestController
+@RequestMapping(value = "/api/empleados", produces = MediaType.APPLICATION_JSON_VALUE)
+public class EmpleadoResource {
+
+    private final EmpleadoServiceImpl empleadoServiceImpl;
+    private final EntityManager entityManager;
+
+    @Autowired
+    public EmpleadoResource(final EmpleadoServiceImpl empleadoServiceImpl, EntityManager entityManager) {
+        this.empleadoServiceImpl = empleadoServiceImpl;
+        this.entityManager = entityManager;
+    }
+
+    @GetMapping
+    public ResponseEntity<List<EmpleadoDTO>> getAllEmpleados() {
+        return ResponseEntity.ok(empleadoServiceImpl.findAll());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<EmpleadoDTO> getEmpleado(@PathVariable(name = "id") final Long id) {
+        return ResponseEntity.ok(empleadoServiceImpl.get(id));
+    }
+
+    @PostMapping
+    @ApiResponse(responseCode = "201")
+    public ResponseEntity<Long> createEmpleado(@RequestBody @Valid final EmpleadoDTO empleadoDTO) {
+        final Long createdId = empleadoServiceImpl.create(empleadoDTO);
+        return new ResponseEntity<>(createdId, HttpStatus.CREATED);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Long> updateEmpleado(@PathVariable(name = "id") final Long id,
+                                               @RequestBody @Valid final EmpleadoDTO empleadoDTO) {
+        empleadoServiceImpl.update(id, empleadoDTO);
+        return ResponseEntity.ok(id);
+    }
+
+    @DeleteMapping("/{id}")
+    @ApiResponse(responseCode = "204")
+    public ResponseEntity<Void> deleteEmpleado(@PathVariable(name = "id") final Long id) {
+        final ReferencedWarning referencedWarning = empleadoServiceImpl.getReferencedWarning(id);
+        if (referencedWarning != null) {
+            throw new ReferencedException(referencedWarning);
+        }
+        empleadoServiceImpl.delete(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/buscar")
+    public ResponseEntity<?> buscar(@RequestParam String atributo, @RequestParam String valor,
+                                    @RequestParam(required = false) String operador) {
+
+        // Validación de atributos
+        boolean atributoValido = false;
+        for (Field field : Empleado.class.getDeclaredFields()) {
+            if (field.getName().equals(atributo)) {
+                atributoValido = true;
+                break;
+            }
+        }
+        if (!atributoValido) {
+            return ResponseEntity.badRequest().body("Atributo no válido: " + atributo);
+        }
+
+        // Conversión de tipos
+        Object valorConvertido = null;
+        try {
+            valorConvertido = switch (Empleado.class.getDeclaredField(atributo).getType().getName()) {
+                case "java.lang.Double" -> Double.parseDouble(valor);
+                case "java.lang.Integer" -> Integer.parseInt(valor);
+                case "java.lang.Boolean" -> Boolean.parseBoolean(valor);
+                default -> valor;
+            };
+        } catch (NoSuchFieldException | NumberFormatException e) {
+            return ResponseEntity.badRequest().body("Error al convertir el valor: " + valor);
+        }
+
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Empleado> criteriaQuery = criteriaBuilder.createQuery(Empleado.class);
+        Root<Empleado> root = criteriaQuery.from(Empleado.class);
+
+        Predicate predicate;
+
+        if (operador != null) {
+            switch (operador.toLowerCase()) {
+                case "mayor":
+                    predicate = criteriaBuilder.greaterThan(root.get(atributo), (Comparable) valorConvertido);
+                    break;
+                case "menor":
+                    predicate = criteriaBuilder.lessThan(root.get(atributo), (Comparable) valorConvertido);
+                    break;
+                case "igual":
+                    predicate = criteriaBuilder.equal(root.get(atributo), valorConvertido);
+                    break;
+                case "like":
+                    predicate = criteriaBuilder.like(root.get(atributo), "%" + valor + "%");
+                    break;
+                default:
+                    return ResponseEntity.badRequest().body("Operador no válido: " + operador);
+            }
+        } else {
+            predicate = criteriaBuilder.equal(root.get(atributo), valorConvertido);
+        }
+
+        criteriaQuery.select(root).where(predicate);
+
+        List<Empleado> resultados = entityManager.createQuery(criteriaQuery).getResultList();
+        return ResponseEntity.ok(resultados);
+    }
+
+}
