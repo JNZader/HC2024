@@ -19,7 +19,6 @@ import java.util.Set;
 import lombok.*;
 import todocode.hackacode.model.Medpago;
 
-
 @Entity
 @Table(name = "Ventas")
 @Data
@@ -55,9 +54,9 @@ public class Venta {
 
     @ManyToMany
     @JoinTable(
-        name = "VentaPaquetes",
-        joinColumns = @JoinColumn(name = "ventaId"),
-        inverseJoinColumns = @JoinColumn(name = "paqueteId")
+            name = "VentaPaquetes",
+            joinColumns = @JoinColumn(name = "ventaId"),
+            inverseJoinColumns = @JoinColumn(name = "paqueteId")
     )
     private Set<Paquete> paquetes;
 

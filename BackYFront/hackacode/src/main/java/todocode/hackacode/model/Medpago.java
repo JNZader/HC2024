@@ -1,6 +1,5 @@
 package todocode.hackacode.model;
 
-
 import lombok.Getter;
 
 @Getter

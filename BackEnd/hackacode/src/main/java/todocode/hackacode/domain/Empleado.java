@@ -1,14 +1,7 @@
 package todocode.hackacode.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+
 import java.util.Set;
 
 import lombok.*;
@@ -22,6 +15,7 @@ import todocode.hackacode.model.Cargo;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
+@EntityListeners(EmpleadoListener.class)
 public class Empleado extends Persona {
 
     @Id
@@ -36,10 +30,20 @@ public class Empleado extends Persona {
     @Column
     private Double sueldo;
 
+    @Column(nullable = false, unique = true)
+    private String email;
+
+    @Column(nullable = false, unique = true)
+    private String dni;
+
     @Column(nullable = false)
     private Boolean estado;
 
     @OneToMany(mappedBy = "empleadoid")
     private Set<Venta> ventas;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "usuario_id", unique = true)
+    private Usuario usuario;
 
 }

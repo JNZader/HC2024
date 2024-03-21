@@ -22,7 +22,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 
-
 @Service
 @Transactional
 public class VentaServiceImpl implements VentaService {
@@ -33,15 +32,13 @@ public class VentaServiceImpl implements VentaService {
     private final PaqueteRepository paqueteRepository;
 
     public VentaServiceImpl(final VentaRepository ventaRepository,
-                            final ClienteRepository clienteRepository, final EmpleadoRepository empleadoRepository,
-                            final PaqueteRepository paqueteRepository) {
+            final ClienteRepository clienteRepository, final EmpleadoRepository empleadoRepository,
+            final PaqueteRepository paqueteRepository) {
         this.ventaRepository = ventaRepository;
         this.clienteRepository = clienteRepository;
         this.empleadoRepository = empleadoRepository;
         this.paqueteRepository = paqueteRepository;
     }
-
-
 
     private VentaDTO mapToDTO(final Venta venta, final VentaDTO ventaDTO) {
         ventaDTO.setId(venta.getId());
@@ -77,34 +74,37 @@ public class VentaServiceImpl implements VentaService {
         return venta;
     }
 
-
-
+    @Override
     public List<VentaDTO> findAll() {
         final List<Venta> ventas = ventaRepository.findAll(Sort.by("id"));
         return ventas.stream()
-              .map(venta -> mapToDTO(venta, new VentaDTO()))
-              .toList();
+                .map(venta -> mapToDTO(venta, new VentaDTO()))
+                .toList();
     }
 
+    @Override
     public VentaDTO get(final Long id) {
         return ventaRepository.findById(id)
-              .map(venta -> mapToDTO(venta, new VentaDTO()))
-              .orElseThrow(NotFoundException::new);
+                .map(venta -> mapToDTO(venta, new VentaDTO()))
+                .orElseThrow(NotFoundException::new);
     }
 
+    @Override
     public Long create(final VentaDTO ventaDTO) {
         final Venta venta = new Venta();
         mapToEntity(ventaDTO, venta);
         return ventaRepository.save(venta).getId();
     }
 
+    @Override
     public void update(final Long id, final VentaDTO ventaDTO) {
         final Venta venta = ventaRepository.findById(id)
-              .orElseThrow(NotFoundException::new);
+                .orElseThrow(NotFoundException::new);
         mapToEntity(ventaDTO, venta);
         ventaRepository.save(venta);
     }
 
+    @Override
     public void delete(final Long id) {
         ventaRepository.deleteById(id);
     }
@@ -113,19 +113,19 @@ public class VentaServiceImpl implements VentaService {
     public Double calcularGananciasDiarias(LocalDate fecha) {
         List<Venta> ventas = ventaRepository.findByFecha(fecha);
         return ventas.stream()
-              .mapToDouble(this::calcularGananciaVenta)
-              .sum();
+                .mapToDouble(this::calcularGananciaVenta)
+                .sum();
     }
 
     @Override
     public Double calcularGananciasMensuales(Integer mes, Integer anio) {
         List<Venta> ventas = ventaRepository.findByFechaBetween(
-              LocalDate.of(anio, mes, 1),
-              LocalDate.of(anio, mes, YearMonth.of(anio, mes).lengthOfMonth())
+                LocalDate.of(anio, mes, 1),
+                LocalDate.of(anio, mes, YearMonth.of(anio, mes).lengthOfMonth())
         );
         return ventas.stream()
-              .mapToDouble(this::calcularGananciaVenta)
-              .sum();
+                .mapToDouble(this::calcularGananciaVenta)
+                .sum();
     }
 
     private Double calcularGananciaVenta(Venta venta) {
@@ -141,8 +141,8 @@ public class VentaServiceImpl implements VentaService {
     public Double calcularGananciasEnRangoFechas(LocalDate fechaInicio, LocalDate fechaFin) {
         List<Venta> ventas = ventaRepository.findByFechaBetween(fechaInicio, fechaFin);
         return ventas.stream()
-              .mapToDouble(this::calcularGananciaVenta)
-              .sum();
+                .mapToDouble(this::calcularGananciaVenta)
+                .sum();
     }
 
 }

@@ -54,7 +54,7 @@ public class ClienteResource {
 
     @PutMapping("/{id}")
     public ResponseEntity<Long> updateCliente(@PathVariable(name = "id") final Long id,
-                                              @RequestBody @Valid final ClienteDTO clienteDTO) {
+            @RequestBody @Valid final ClienteDTO clienteDTO) {
         clienteServiceImpl.update(id, clienteDTO);
         return ResponseEntity.ok(id);
     }
@@ -72,7 +72,7 @@ public class ClienteResource {
 
     @GetMapping("/buscar")
     public ResponseEntity<?> buscar(@RequestParam String atributo, @RequestParam String valor,
-                                    @RequestParam(required = false) String operador) {
+            @RequestParam(required = false) String operador) {
 
         // Validación de atributos
         boolean atributoValido = false;
