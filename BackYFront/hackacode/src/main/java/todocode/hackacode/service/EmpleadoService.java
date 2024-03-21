@@ -6,14 +6,14 @@ import java.util.List;
 
 public interface EmpleadoService {
 
-   List<EmpleadoDTO> findAll();
+    List<EmpleadoDTO> findAll();
 
-   EmpleadoDTO get(Long id);
+    EmpleadoDTO get(Long id);
 
-   Long create(EmpleadoDTO empleadoDTO);
+    Long create(EmpleadoDTO empleadoDTO);
 
-   void update(Long id, EmpleadoDTO empleadoDTO);
+    void update(Long id, EmpleadoDTO empleadoDTO);
 
-   void delete(Long id);
+    void delete(Long id);
 
 }

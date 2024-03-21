@@ -6,13 +6,13 @@ import java.util.List;
 
 public interface PrecioService {
 
-   List<PrecioDTO> findAll();
+    List<PrecioDTO> findAll();
 
-   PrecioDTO get(Long id);
+    PrecioDTO get(Long id);
 
-   Long create(PrecioDTO precioDTO);
+    Long create(PrecioDTO precioDTO);
 
-   void update(Long id, PrecioDTO precioDTO);
+    void update(Long id, PrecioDTO precioDTO);
 
-   void delete(Long id);
+    void delete(Long id);
 }

@@ -17,11 +17,10 @@ import java.util.Map;
 import org.springframework.web.servlet.HandlerMapping;
 import todocode.hackacode.service.impl.PrecioServiceImpl;
 
-
 /**
  * Validate that the id value isn't taken yet.
  */
-@Target({ FIELD, METHOD, ANNOTATION_TYPE })
+@Target({FIELD, METHOD, ANNOTATION_TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Constraint(
@@ -52,8 +51,9 @@ public @interface PrecioIdServicioUnique {
                 // no value present
                 return true;
             }
-            @SuppressWarnings("unchecked") final Map<String, String> pathVariables =
-                    ((Map<String, String>)request.getAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE));
+            @SuppressWarnings("unchecked")
+            final Map<String, String> pathVariables
+                    = ((Map<String, String>) request.getAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE));
             final String currentId = pathVariables.get("id");
             if (currentId != null && value.equals(precioService.get(Long.parseLong(currentId)).getIdServicio())) {
                 // value hasn't changed

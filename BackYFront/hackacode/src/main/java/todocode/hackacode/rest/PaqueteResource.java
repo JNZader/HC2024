@@ -23,7 +23,6 @@ import todocode.hackacode.service.impl.PaqueteServiceImpl;
 import todocode.hackacode.util.ReferencedException;
 import todocode.hackacode.util.ReferencedWarning;
 
-
 @RestController
 @RequestMapping(value = "/api/paquetes", produces = MediaType.APPLICATION_JSON_VALUE)
 public class PaqueteResource {
@@ -56,7 +55,7 @@ public class PaqueteResource {
 
     @PutMapping("/{id}")
     public ResponseEntity<Long> updatePaquete(@PathVariable(name = "id") final Long id,
-                                              @RequestBody @Valid final PaqueteDTO paqueteDTO) {
+            @RequestBody @Valid final PaqueteDTO paqueteDTO) {
         paqueteServiceImpl.update(id, paqueteDTO);
         return ResponseEntity.ok(id);
     }
@@ -74,7 +73,7 @@ public class PaqueteResource {
 
     @GetMapping("/buscar")
     public ResponseEntity<?> buscar(@RequestParam String atributo, @RequestParam String valor,
-                                    @RequestParam(required = false) String operador) {
+            @RequestParam(required = false) String operador) {
 
         // Validación de atributos
         boolean atributoValido = false;
@@ -92,10 +91,14 @@ public class PaqueteResource {
         Object valorConvertido = null;
         try {
             valorConvertido = switch (Paquete.class.getDeclaredField(atributo).getType().getName()) {
-                case "java.lang.Double" -> Double.parseDouble(valor);
-                case "java.lang.Integer" -> Integer.parseInt(valor);
-                case "java.lang.Boolean" -> Boolean.parseBoolean(valor);
-                default -> valor;
+                case "java.lang.Double" ->
+                    Double.parseDouble(valor);
+                case "java.lang.Integer" ->
+                    Integer.parseInt(valor);
+                case "java.lang.Boolean" ->
+                    Boolean.parseBoolean(valor);
+                default ->
+                    valor;
             };
         } catch (NoSuchFieldException | NumberFormatException e) {
             return ResponseEntity.badRequest().body("Error al convertir el valor: " + valor);

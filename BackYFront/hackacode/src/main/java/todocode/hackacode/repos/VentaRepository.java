@@ -8,7 +8,6 @@ import todocode.hackacode.domain.Empleado;
 import todocode.hackacode.domain.Paquete;
 import todocode.hackacode.domain.Venta;
 
-
 public interface VentaRepository extends JpaRepository<Venta, Long> {
 
     Venta findFirstByClienteId(Cliente cliente);

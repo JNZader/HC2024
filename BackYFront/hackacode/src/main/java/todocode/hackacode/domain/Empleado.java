@@ -15,7 +15,6 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 import todocode.hackacode.model.Cargo;
 
-
 @Entity
 @Table(name = "Empleadoes")
 @Data

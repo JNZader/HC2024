@@ -6,7 +6,6 @@ import java.time.LocalDate;
 
 import lombok.*;
 
-
 @Entity
 @Table(name = "Servicios")
 @Data

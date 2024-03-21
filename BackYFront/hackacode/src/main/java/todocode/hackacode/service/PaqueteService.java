@@ -7,15 +7,15 @@ import java.util.List;
 
 public interface PaqueteService {
 
-   List<PaqueteDTO> findAll();
+    List<PaqueteDTO> findAll();
 
-   PaqueteDTO get(Long id);
+    PaqueteDTO get(Long id);
 
-   Long create(PaqueteDTO paqueteDTO);
+    Long create(PaqueteDTO paqueteDTO);
 
-   void update(Long id, PaqueteDTO paqueteDTO);
+    void update(Long id, PaqueteDTO paqueteDTO);
 
-   void delete(Long id);
+    void delete(Long id);
 
-   PaqueteDTO mapToDTO(Paquete paquete);
+    PaqueteDTO mapToDTO(Paquete paquete);
 }
