@@ -1,9 +1,11 @@
 package todocode.hackacode.util;
 
-import java.util.ArrayList;
-import java.util.stream.Collectors;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.ArrayList;
+import java.util.stream.Collectors;
+
 
 @Getter
 @Setter

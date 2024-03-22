@@ -34,31 +34,56 @@ public class PaqueteResource {
         this.paqueteServiceImpl = paqueteServiceImpl;
         this.entityManager = entityManager;
     }
-
+    /**
+     * Obtiene todos los paquetes.
+     *
+     * @return ResponseEntity con la lista de paquetes.
+     */
     @GetMapping
     public ResponseEntity<List<PaqueteDTO>> getAllPaquetes() {
         return ResponseEntity.ok(paqueteServiceImpl.findAll());
     }
-
+    /**
+     * Obtiene un paquete por su ID.
+     *
+     * @param id ID del paquete.
+     * @return ResponseEntity con el paquete encontrado.
+     */
     @GetMapping("/{id}")
     public ResponseEntity<PaqueteDTO> getPaquete(@PathVariable(name = "id") final Long id) {
         return ResponseEntity.ok(paqueteServiceImpl.get(id));
     }
-
+    /**
+     * Crea un nuevo paquete.
+     *
+     * @param paqueteDTO DTO del paquete a crear.
+     * @return ResponseEntity con el ID del paquete creado.
+     */
     @PostMapping
     @ApiResponse(responseCode = "201")
     public ResponseEntity<Long> createPaquete(@RequestBody @Valid final PaqueteDTO paqueteDTO) {
         final Long createdId = paqueteServiceImpl.create(paqueteDTO);
         return new ResponseEntity<>(createdId, HttpStatus.CREATED);
     }
-
+    /**
+     * Actualiza un paquete existente.
+     *
+     * @param id         ID del paquete a actualizar.
+     * @param paqueteDTO DTO con los datos actualizados del paquete.
+     * @return ResponseEntity con el ID del paquete actualizado.
+     */
     @PutMapping("/{id}")
     public ResponseEntity<Long> updatePaquete(@PathVariable(name = "id") final Long id,
             @RequestBody @Valid final PaqueteDTO paqueteDTO) {
         paqueteServiceImpl.update(id, paqueteDTO);
         return ResponseEntity.ok(id);
     }
-
+    /**
+     * Elimina un paquete por su ID.
+     *
+     * @param id ID del paquete a eliminar.
+     * @return ResponseEntity que indica el éxito de la operación.
+     */
     @DeleteMapping("/{id}")
     @ApiResponse(responseCode = "204")
     public ResponseEntity<Void> deletePaquete(@PathVariable(name = "id") final Long id) {
@@ -69,7 +94,14 @@ public class PaqueteResource {
         paqueteServiceImpl.delete(id);
         return ResponseEntity.noContent().build();
     }
-
+    /**
+     * Busca paquetes por un atributo específico.
+     *
+     * @param atributo  Atributo por el cual buscar.
+     * @param valor     Valor del atributo por el cual buscar.
+     * @param operador  Operador de comparación (opcional).
+     * @return ResponseEntity con la lista de paquetes que coinciden con la búsqueda.
+     */
     @GetMapping("/buscar")
     public ResponseEntity<?> buscar(@RequestParam String atributo, @RequestParam String valor,
             @RequestParam(required = false) String operador) {

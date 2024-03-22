@@ -43,6 +43,6 @@ public class EmpleadoDTO {
     @NotNull
     private Boolean estado;
 
-    private UUID usuario_id;
+    private UUID idUsuario;
 
 }

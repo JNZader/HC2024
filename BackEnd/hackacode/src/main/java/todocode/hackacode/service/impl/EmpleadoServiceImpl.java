@@ -16,6 +16,7 @@ import todocode.hackacode.util.ReferencedWarning;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Logger;
 
 @Service
 public class EmpleadoServiceImpl implements EmpleadoService {
@@ -80,7 +81,7 @@ public class EmpleadoServiceImpl implements EmpleadoService {
         empleadoDTO.setCargo(empleado.getCargo());
         empleadoDTO.setSueldo(empleado.getSueldo());
         empleadoDTO.setEstado(empleado.getEstado());
-        empleadoDTO.setUsuario_id(empleado.getUsuario().getId());
+        empleadoDTO.setIdUsuario(empleado.getUsuario().getId());
         return empleadoDTO;
     }
 
@@ -98,10 +99,11 @@ public class EmpleadoServiceImpl implements EmpleadoService {
         empleado.setEstado(empleadoDTO.getEstado());
         Usuario usuario = null;
         try {
-            Optional<Usuario> optionalUsuario = usuarioRepository.findById(empleadoDTO.getUsuario_id());
+            Optional<Usuario> optionalUsuario = usuarioRepository.findById(empleadoDTO.getIdUsuario());
             usuario = optionalUsuario.orElse(new Usuario());
         } catch (Exception e) {
-            System.out.println("AAAAA");
+            Logger logger = Logger.getLogger(getClass().getName());
+            logger.info("Error en mapToEntity");
         }
         empleado.setUsuario(usuario);
         return empleado;
