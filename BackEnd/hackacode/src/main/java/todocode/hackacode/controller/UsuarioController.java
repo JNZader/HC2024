@@ -29,6 +29,7 @@ public class UsuarioController {
       usuario.setUsername(crearUsuarioDTO.username());
       usuario.setPassword(passwordEncoder.encode(crearUsuarioDTO.password()));
       usuario.setRol(crearUsuarioDTO.cargo());
+      usuario.setPassTemporaria(false);
 
       Usuario savedUsuario = usuarioRepository.save(usuario);
       return ResponseEntity.ok(savedUsuario);

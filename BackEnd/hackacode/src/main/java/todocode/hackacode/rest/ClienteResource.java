@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import todocode.hackacode.domain.Cliente;
 import todocode.hackacode.model.ClienteDTO;
@@ -61,6 +62,7 @@ public class ClienteResource {
 
     @DeleteMapping("/{id}")
     @ApiResponse(responseCode = "204")
+    @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
     public ResponseEntity<Void> deleteCliente(@PathVariable(name = "id") final Long id) {
         final ReferencedWarning referencedWarning = clienteServiceImpl.getReferencedWarning(id);
         if (referencedWarning != null) {

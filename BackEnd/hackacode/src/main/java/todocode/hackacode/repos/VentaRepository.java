@@ -3,11 +3,12 @@ package todocode.hackacode.repos;
 import java.time.LocalDate;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 import todocode.hackacode.domain.Cliente;
 import todocode.hackacode.domain.Empleado;
 import todocode.hackacode.domain.Paquete;
 import todocode.hackacode.domain.Venta;
-
+@Repository
 public interface VentaRepository extends JpaRepository<Venta, Long> {
 
     Venta findFirstByClienteId(Cliente cliente);

@@ -15,9 +15,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import todocode.hackacode.domain.Empleado;
+import todocode.hackacode.domain.Usuario;
 import todocode.hackacode.model.EmpleadoDTO;
+import todocode.hackacode.repos.UsuarioRepository;
 import todocode.hackacode.service.impl.EmpleadoServiceImpl;
 import todocode.hackacode.util.ReferencedException;
 import todocode.hackacode.util.ReferencedWarning;
@@ -28,11 +31,15 @@ public class EmpleadoResource {
 
     private final EmpleadoServiceImpl empleadoServiceImpl;
     private final EntityManager entityManager;
+    private final UsuarioRepository usuarioRepository;
+    private final BCryptPasswordEncoder passwordEncoder;
 
     @Autowired
-    public EmpleadoResource(final EmpleadoServiceImpl empleadoServiceImpl, EntityManager entityManager) {
+    public EmpleadoResource(final EmpleadoServiceImpl empleadoServiceImpl, EntityManager entityManager, UsuarioRepository usuarioRepository, BCryptPasswordEncoder passwordEncoder) {
         this.empleadoServiceImpl = empleadoServiceImpl;
         this.entityManager = entityManager;
+       this.usuarioRepository = usuarioRepository;
+       this.passwordEncoder = passwordEncoder;
     }
 
     @GetMapping
@@ -48,7 +55,19 @@ public class EmpleadoResource {
     @PostMapping
     @ApiResponse(responseCode = "201")
     public ResponseEntity<Long> createEmpleado(@RequestBody @Valid final EmpleadoDTO empleadoDTO) {
+
+        Usuario usuario=Usuario.builder()
+              .id(empleadoDTO.getUsuario_id())
+              .username(empleadoDTO.getEmail())
+              .password(passwordEncoder.encode(empleadoDTO.getDni()))
+              .rol(empleadoDTO.getCargo())
+              .passTemporaria(true)
+              .build();
+
         final Long createdId = empleadoServiceImpl.create(empleadoDTO);
+
+        usuarioRepository.save(usuario);
+
         return new ResponseEntity<>(createdId, HttpStatus.CREATED);
     }
 
