@@ -10,7 +10,6 @@ import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import todocode.hackacode.model.CambiarPassDTO;
 import todocode.hackacode.model.LoginRequest;
@@ -50,7 +49,7 @@ public class TokenController {
     }
 
     var now= Instant.now();
-    var expiresIn=300L;
+    var expiresIn=3600L;
 
     var scope=user.get().getRol();
 

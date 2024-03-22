@@ -1,28 +1,35 @@
 package todocode.hackacode.service.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import todocode.hackacode.domain.Empleado;
+import todocode.hackacode.domain.Usuario;
 import todocode.hackacode.domain.Venta;
 import todocode.hackacode.model.EmpleadoDTO;
 import todocode.hackacode.repos.EmpleadoRepository;
+import todocode.hackacode.repos.UsuarioRepository;
 import todocode.hackacode.repos.VentaRepository;
 import todocode.hackacode.service.EmpleadoService;
 import todocode.hackacode.util.NotFoundException;
 import todocode.hackacode.util.ReferencedWarning;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class EmpleadoServiceImpl implements EmpleadoService {
 
     private final EmpleadoRepository empleadoRepository;
     private final VentaRepository ventaRepository;
+    private final UsuarioRepository usuarioRepository;
 
+    @Autowired
     public EmpleadoServiceImpl(final EmpleadoRepository empleadoRepository,
-            final VentaRepository ventaRepository) {
+                               final VentaRepository ventaRepository, UsuarioRepository usuarioRepository) {
         this.empleadoRepository = empleadoRepository;
         this.ventaRepository = ventaRepository;
+       this.usuarioRepository = usuarioRepository;
     }
 
     @Override
@@ -60,7 +67,7 @@ public class EmpleadoServiceImpl implements EmpleadoService {
         empleadoRepository.deleteById(id);
     }
 
-    private EmpleadoDTO mapToDTO(final Empleado empleado, final EmpleadoDTO empleadoDTO) {
+    public EmpleadoDTO mapToDTO(final Empleado empleado, final EmpleadoDTO empleadoDTO) {
         empleadoDTO.setNombre(empleado.getNombre());
         empleadoDTO.setApellido(empleado.getApellido());
         empleadoDTO.setDireccion(empleado.getDireccion());
@@ -73,10 +80,11 @@ public class EmpleadoServiceImpl implements EmpleadoService {
         empleadoDTO.setCargo(empleado.getCargo());
         empleadoDTO.setSueldo(empleado.getSueldo());
         empleadoDTO.setEstado(empleado.getEstado());
+        empleadoDTO.setUsuario_id(empleado.getUsuario().getId());
         return empleadoDTO;
     }
 
-    private Empleado mapToEntity(final EmpleadoDTO empleadoDTO, final Empleado empleado) {
+    public Empleado mapToEntity(final EmpleadoDTO empleadoDTO, final Empleado empleado) {
         empleado.setNombre(empleadoDTO.getNombre());
         empleado.setApellido(empleadoDTO.getApellido());
         empleado.setDireccion(empleadoDTO.getDireccion());
@@ -88,6 +96,14 @@ public class EmpleadoServiceImpl implements EmpleadoService {
         empleado.setCargo(empleadoDTO.getCargo());
         empleado.setSueldo(empleadoDTO.getSueldo());
         empleado.setEstado(empleadoDTO.getEstado());
+        Usuario usuario = null;
+        try {
+            Optional<Usuario> optionalUsuario = usuarioRepository.findById(empleadoDTO.getUsuario_id());
+            usuario = optionalUsuario.orElse(new Usuario());
+        } catch (Exception e) {
+            System.out.println("AAAAA");
+        }
+        empleado.setUsuario(usuario);
         return empleado;
     }
 
@@ -103,5 +119,4 @@ public class EmpleadoServiceImpl implements EmpleadoService {
         }
         return null;
     }
-
 }

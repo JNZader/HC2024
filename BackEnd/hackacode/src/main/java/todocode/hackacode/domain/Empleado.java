@@ -9,13 +9,12 @@ import lombok.experimental.SuperBuilder;
 import todocode.hackacode.model.Cargo;
 
 @Entity
-@Table(name = "Empleadoes")
+@Table(name = "Empleados")
 @Data
 @EqualsAndHashCode(callSuper = true)
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-@EntityListeners(EmpleadoListener.class)
 public class Empleado extends Persona {
 
     @Id

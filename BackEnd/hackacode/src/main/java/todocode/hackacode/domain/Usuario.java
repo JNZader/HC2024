@@ -2,6 +2,7 @@ package todocode.hackacode.domain;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -15,6 +16,7 @@ import java.util.UUID;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Usuario {
    @Id
    @GeneratedValue(strategy = GenerationType.UUID)
@@ -34,4 +36,5 @@ public class Usuario {
    public boolean isLoginCorrect(LoginRequest loginRequest, BCryptPasswordEncoder passwordEncoder){
       return passwordEncoder.matches(loginRequest.password(),this.password);
    }
+
 }

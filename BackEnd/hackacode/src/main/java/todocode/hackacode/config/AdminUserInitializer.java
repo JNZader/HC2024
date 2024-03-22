@@ -11,19 +11,25 @@ import todocode.hackacode.repos.UsuarioRepository;
 @Component
 public class AdminUserInitializer {
 
+   private final UsuarioRepository usuarioRepository;
+   private final BCryptPasswordEncoder passwordEncoder;
+
    @Autowired
-   private UsuarioRepository usuarioRepository;
-   @Autowired
-   private BCryptPasswordEncoder passwordEncoder;
+   public AdminUserInitializer(UsuarioRepository usuarioRepository, BCryptPasswordEncoder passwordEncoder) {
+      this.usuarioRepository = usuarioRepository;
+      this.passwordEncoder = passwordEncoder;
+   }
 
    @PostConstruct
    public void createAdminUser() {
       if (usuarioRepository.findByUsername("admin").isEmpty()) {
-         Usuario admin = new Usuario();
-         admin.setUsername("admin");
-         admin.setPassword(passwordEncoder.encode("admin"));
-         admin.setRol(Cargo.ADMIN);
-         admin.setPassTemporaria(true);
+         Usuario admin = Usuario.builder()
+               .username("admin")
+               .password(passwordEncoder.encode("admin"))
+               .rol(Cargo.ADMIN)
+               .passTemporaria(true)
+               .build();
+
          usuarioRepository.save(admin);
       }
    }

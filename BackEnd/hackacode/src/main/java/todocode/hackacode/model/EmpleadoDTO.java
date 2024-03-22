@@ -3,6 +3,8 @@ package todocode.hackacode.model;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
+import java.util.UUID;
+
 import lombok.Data;
 
 @Data
@@ -40,5 +42,7 @@ public class EmpleadoDTO {
 
     @NotNull
     private Boolean estado;
+
+    private UUID usuario_id;
 
 }
