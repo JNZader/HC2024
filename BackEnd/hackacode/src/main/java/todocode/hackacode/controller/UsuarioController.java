@@ -14,13 +14,13 @@ import java.util.List;
 @RestController
 public class UsuarioController {
 
-   private UsuarioRepository usuarioRepository;
-   private BCryptPasswordEncoder passwordEncoder;
+   private final UsuarioRepository usuarioRepository;
+   private final BCryptPasswordEncoder passwordEncoder;
 
    @Autowired
-   public UsuarioController(UsuarioRepository usuarioRepository){
+   public UsuarioController(UsuarioRepository usuarioRepository, BCryptPasswordEncoder passwordEncoder){
       this.usuarioRepository=usuarioRepository;
-      this.passwordEncoder=passwordEncoder;
+      this.passwordEncoder = passwordEncoder;
    }
 
    @PostMapping("/crear")

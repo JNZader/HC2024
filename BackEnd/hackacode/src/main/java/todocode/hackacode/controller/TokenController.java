@@ -25,15 +25,14 @@ public class TokenController {
 
     private final JwtEncoder jwtEncoder;
     private final UsuarioRepository usuarioRepository;
-
-    @Autowired
-    private BCryptPasswordEncoder passwordEncoder;
+    private final BCryptPasswordEncoder passwordEncoder;
 
 @Autowired
-   public TokenController(JwtEncoder jwtEncoder, UsuarioRepository usuarioRepository) {
+   public TokenController(JwtEncoder jwtEncoder, UsuarioRepository usuarioRepository, BCryptPasswordEncoder passwordEncoder) {
       this.jwtEncoder = jwtEncoder;
       this.usuarioRepository = usuarioRepository;
-   }
+   this.passwordEncoder = passwordEncoder;
+}
 
    @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest){
@@ -44,7 +43,9 @@ public class TokenController {
         throw new BadCredentialsException("Usuario o contraseña invalido");
     }
 
-    if (user.get().getPassTemporaria() == true) {
+    boolean passTemp=user.get().getPassTemporaria();
+
+    if (Boolean.TRUE.equals(passTemp)) {
         throw new TemporaryPasswordException("Please change your temporary password.");
     }
 

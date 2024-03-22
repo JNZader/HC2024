@@ -57,7 +57,7 @@ public class EmpleadoResource {
     public ResponseEntity<Long> createEmpleado(@RequestBody @Valid final EmpleadoDTO empleadoDTO) {
 
         Usuario usuario=Usuario.builder()
-              .id(empleadoDTO.getUsuario_id())
+              .id(empleadoDTO.getIdUsuario())
               .username(empleadoDTO.getEmail())
               .password(passwordEncoder.encode(empleadoDTO.getDni()))
               .rol(empleadoDTO.getCargo())
