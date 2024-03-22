@@ -33,7 +33,12 @@ public class TokenController {
       this.usuarioRepository = usuarioRepository;
    this.passwordEncoder = passwordEncoder;
 }
-
+   /**
+    * Maneja la solicitud de inicio de sesión y devuelve un token JWT si las credenciales son válidas.
+    *
+    * @param loginRequest Objeto que contiene el nombre de usuario y la contraseña.
+    * @return ResponseEntity con la respuesta de inicio de sesión, incluido el token JWT.
+    */
    @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest){
 
@@ -46,7 +51,7 @@ public class TokenController {
     boolean passTemp=user.get().getPassTemporaria();
 
     if (Boolean.TRUE.equals(passTemp)) {
-        throw new TemporaryPasswordException("Please change your temporary password.");
+        throw new TemporaryPasswordException("Por favor cambia la contraseña temporal.");
     }
 
     var now= Instant.now();
@@ -66,13 +71,18 @@ public class TokenController {
 
     return ResponseEntity.ok(new LoginResponse(jwtValue,expiresIn));
    }
-
+   /**
+    * Maneja la solicitud de cambio de contraseña.
+    *
+    * @param request Objeto que contiene el nombre de usuario, la contraseña actual y la nueva contraseña.
+    * @return ResponseEntity con la respuesta del cambio de contraseña.
+    */
    @PostMapping("/cambiar-pass")
    public ResponseEntity<Void> cambiarPass(@RequestBody CambiarPassDTO request) {
       var user = usuarioRepository.findByUsername(request.username()).orElseThrow();
 
       if (!passwordEncoder.matches(request.password(), user.getPassword())) {
-         throw new BadCredentialsException("Invalid current password");
+         throw new BadCredentialsException("Contraseña invalida");
       }
 
       user.setPassword(passwordEncoder.encode(request.newPass()));

@@ -35,31 +35,56 @@ public class ServicioResource {
         this.servicioServiceImpl = servicioServiceImpl;
         this.entityManager = entityManager;
     }
-
+    /**
+     * Obtiene todos los servicios.
+     *
+     * @return ResponseEntity con la lista de servicios.
+     */
     @GetMapping
     public ResponseEntity<List<ServicioDTO>> getAllServicios() {
         return ResponseEntity.ok(servicioServiceImpl.findAll());
     }
-
+    /**
+     * Obtiene un servicio por su ID.
+     *
+     * @param id ID del servicio.
+     * @return ResponseEntity con el servicio encontrado.
+     */
     @GetMapping("/{id}")
     public ResponseEntity<ServicioDTO> getServicio(@PathVariable(name = "id") final Long id) {
         return ResponseEntity.ok(servicioServiceImpl.get(id));
     }
-
+    /**
+     * Crea un nuevo servicio.
+     *
+     * @param servicioDTO DTO del servicio a crear.
+     * @return ResponseEntity con el ID del servicio creado.
+     */
     @PostMapping
     @ApiResponse(responseCode = "201")
     public ResponseEntity<Long> createServicio(@RequestBody @Valid final ServicioDTO servicioDTO) {
         final Long createdId = servicioServiceImpl.create(servicioDTO);
         return new ResponseEntity<>(createdId, HttpStatus.CREATED);
     }
-
+    /**
+     * Actualiza un servicio existente.
+     *
+     * @param id         ID del servicio a actualizar.
+     * @param servicioDTO DTO con los datos actualizados del servicio.
+     * @return ResponseEntity con el ID del servicio actualizado.
+     */
     @PutMapping("/{id}")
     public ResponseEntity<Long> updateServicio(@PathVariable(name = "id") final Long id,
             @RequestBody @Valid final ServicioDTO servicioDTO) {
         servicioServiceImpl.update(id, servicioDTO);
         return ResponseEntity.ok(id);
     }
-
+    /**
+     * Elimina un servicio por su ID.
+     *
+     * @param id ID del servicio a eliminar.
+     * @return ResponseEntity que indica el éxito de la operación.
+     */
     @DeleteMapping("/{id}")
     @ApiResponse(responseCode = "204")
     public ResponseEntity<Void> deleteServicio(@PathVariable(name = "id") final Long id) {
@@ -70,7 +95,14 @@ public class ServicioResource {
         servicioServiceImpl.delete(id);
         return ResponseEntity.noContent().build();
     }
-
+    /**
+     * Busca servicios por un atributo específico.
+     *
+     * @param atributo  Atributo por el cual buscar.
+     * @param valor     Valor del atributo por el cual buscar.
+     * @param operador  Operador de comparación (opcional).
+     * @return ResponseEntity con la lista de servicios que coinciden con la búsqueda.
+     */
     @GetMapping("/buscar")
     public ResponseEntity<?> buscar(@RequestParam String atributo, @RequestParam String valor,
             @RequestParam(required = false) String operador) {

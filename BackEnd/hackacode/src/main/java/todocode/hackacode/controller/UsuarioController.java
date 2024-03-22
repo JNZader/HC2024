@@ -22,7 +22,12 @@ public class UsuarioController {
       this.usuarioRepository=usuarioRepository;
       this.passwordEncoder = passwordEncoder;
    }
-
+   /**
+    * Crea un nuevo usuario.
+    *
+    * @param crearUsuarioDTO Objeto que contiene la información del nuevo usuario.
+    * @return ResponseEntity con el usuario creado.
+    */
    @PostMapping("/crear")
    public ResponseEntity<?> crearUsuario(@RequestBody CrearUsuarioDTO crearUsuarioDTO){
       Usuario usuario = new Usuario();
@@ -34,7 +39,11 @@ public class UsuarioController {
       Usuario savedUsuario = usuarioRepository.save(usuario);
       return ResponseEntity.ok(savedUsuario);
    }
-
+   /**
+    * Lista todos los usuarios.
+    *
+    * @return ResponseEntity con la lista de usuarios.
+    */
    @GetMapping("/listar")
    @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
    public ResponseEntity<List<Usuario>> listarUsuarios(){
