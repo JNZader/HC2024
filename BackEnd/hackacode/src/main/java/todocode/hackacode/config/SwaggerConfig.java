@@ -13,12 +13,14 @@ import io.swagger.v3.oas.models.responses.ApiResponse;
 import org.springdoc.core.customizers.OperationCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
 
 /**
  * Configuración de Swagger para documentar la API de la aplicación.
  */
 @Configuration
-public class SwaggerConfig {
+public class SwaggerConfig  implements WebMvcConfigurer {
 
     /**
      * Bean que define la especificación OpenAPI.

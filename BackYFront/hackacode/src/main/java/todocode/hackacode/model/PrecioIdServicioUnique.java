@@ -1,21 +1,20 @@
 package todocode.hackacode.model;
 
-import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
-import static java.lang.annotation.ElementType.FIELD;
-import static java.lang.annotation.ElementType.METHOD;
-
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Constraint;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import jakarta.validation.Payload;
+import org.springframework.web.servlet.HandlerMapping;
+import todocode.hackacode.service.impl.PrecioServiceImpl;
+
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.util.Map;
-import org.springframework.web.servlet.HandlerMapping;
-import todocode.hackacode.service.impl.PrecioServiceImpl;
+
+import static java.lang.annotation.ElementType.*;
 
 /**
  * Validate that the id value isn't taken yet.
@@ -36,12 +35,12 @@ public @interface PrecioIdServicioUnique {
 
     class PrecioIdServicioUniqueValidator implements ConstraintValidator<PrecioIdServicioUnique, Long> {
 
-        private final PrecioServiceImpl precioService;
+        private final PrecioServiceImpl precioServiceImpl;
         private final HttpServletRequest request;
 
-        public PrecioIdServicioUniqueValidator(final PrecioServiceImpl precioService,
+        public PrecioIdServicioUniqueValidator(final PrecioServiceImpl precioServiceImpl,
                 final HttpServletRequest request) {
-            this.precioService = precioService;
+            this.precioServiceImpl = precioServiceImpl;
             this.request = request;
         }
 
@@ -55,11 +54,11 @@ public @interface PrecioIdServicioUnique {
             final Map<String, String> pathVariables
                     = ((Map<String, String>) request.getAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE));
             final String currentId = pathVariables.get("id");
-            if (currentId != null && value.equals(precioService.get(Long.parseLong(currentId)).getIdServicio())) {
+            if (currentId != null && value.equals(precioServiceImpl.get(Long.getLong(currentId)))) {
                 // value hasn't changed
                 return true;
             }
-            return !precioService.idServicioExists(value);
+            return !precioServiceImpl.idServicioExists(value);
         }
 
     }

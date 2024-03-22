@@ -1,10 +1,11 @@
 package todocode.hackacode.domain;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-
-import lombok.*;
 
 @Entity
 @Table(name = "Servicios")
@@ -40,5 +41,17 @@ public class Servicio {
 
     @OneToOne(mappedBy = "idServicio", fetch = FetchType.LAZY)
     private Precio precioVenta;
+
+    public Paquete getPaqueteid() {
+
+        return this.paqueteid;
+
+    }
+
+    public Object getPrecioVenta() {
+
+        return this.precioVenta;
+
+    }
 
 }

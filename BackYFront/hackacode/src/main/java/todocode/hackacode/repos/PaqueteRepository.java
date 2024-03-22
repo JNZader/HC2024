@@ -1,7 +1,9 @@
 package todocode.hackacode.repos;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 import todocode.hackacode.domain.Paquete;
 
+@Repository
 public interface PaqueteRepository extends JpaRepository<Paquete, Long> {
 }

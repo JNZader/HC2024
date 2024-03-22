@@ -1,11 +1,9 @@
 package todocode.hackacode.model;
 
 import jakarta.validation.constraints.NotNull;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
-@Getter
-@Setter
+@Data
 public class PrecioDTO {
 
     private Long id;
