@@ -23,7 +23,7 @@ public abstract class Persona {
     @Column
     private String direccion;
 
-    @Column
+    @Column(nullable = false, unique = true)
     private String dni;
 
     @Column
@@ -35,7 +35,7 @@ public abstract class Persona {
     @Column
     private String celular;
 
-    @Column
+    @Column(nullable = false, unique = true)
     private String email;
 
 }

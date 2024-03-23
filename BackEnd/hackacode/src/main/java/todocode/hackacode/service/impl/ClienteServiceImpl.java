@@ -2,6 +2,7 @@ package todocode.hackacode.service.impl;
 
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import todocode.hackacode.domain.Cliente;
 import todocode.hackacode.domain.Venta;
 import todocode.hackacode.model.ClienteDTO;
@@ -11,6 +12,7 @@ import todocode.hackacode.service.ClienteService;
 import todocode.hackacode.util.NotFoundException;
 import todocode.hackacode.util.ReferencedWarning;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -60,7 +62,18 @@ public class ClienteServiceImpl implements ClienteService {
         clienteRepository.deleteById(id);
     }
 
-    private ClienteDTO mapToDTO(final Cliente cliente, final ClienteDTO clienteDTO) {
+    @Transactional(readOnly = true)
+    @Override
+    public Cliente findById(Long id) {
+        return clienteRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    public boolean existsById(Long id) {
+        return clienteRepository.existsById(id);
+    }
+
+    public ClienteDTO mapToDTO(final Cliente cliente, final ClienteDTO clienteDTO) {
         clienteDTO.setNombre(cliente.getNombre());
         clienteDTO.setApellido(cliente.getApellido());
         clienteDTO.setDireccion(cliente.getDireccion());
@@ -73,8 +86,18 @@ public class ClienteServiceImpl implements ClienteService {
         clienteDTO.setEstado(cliente.getEstado());
         return clienteDTO;
     }
+    public List<ClienteDTO> mapToDTOList(List<Cliente> clientes) {
+        List<ClienteDTO> clienteDTOs = new ArrayList<>();
 
-    private Cliente mapToEntity(final ClienteDTO clienteDTO, final Cliente cliente) {
+        for (Cliente cliente : clientes) {
+            ClienteDTO clienteDTO = mapToDTO(cliente, new ClienteDTO());
+            clienteDTOs.add(clienteDTO);
+        }
+
+        return clienteDTOs;
+    }
+
+    public Cliente mapToEntity(final ClienteDTO clienteDTO, final Cliente cliente) {
         cliente.setNombre(clienteDTO.getNombre());
         cliente.setApellido(clienteDTO.getApellido());
         cliente.setDireccion(clienteDTO.getDireccion());
@@ -100,4 +123,42 @@ public class ClienteServiceImpl implements ClienteService {
         return null;
     }
 
+    public Cliente updateCliente(ClienteDTO clienteDTO, Cliente cliente) {
+        if (clienteDTO == null) {
+            return cliente;
+        }
+
+        if (clienteDTO.getNombre() != null) {
+            cliente.setNombre(clienteDTO.getNombre());
+        }
+        if (clienteDTO.getApellido() != null) {
+            cliente.setApellido(clienteDTO.getApellido());
+        }
+        if (clienteDTO.getDireccion() != null) {
+            cliente.setDireccion(clienteDTO.getDireccion());
+        }
+        if (clienteDTO.getDni() != null) {
+            cliente.setDni(clienteDTO.getDni());
+        }
+        if (clienteDTO.getFechaNacimiento() != null) {
+            cliente.setFechaNacimiento(clienteDTO.getFechaNacimiento());
+        }
+        if (clienteDTO.getNacionalidad() != null) {
+            cliente.setNacionalidad(clienteDTO.getNacionalidad());
+        }
+        if (clienteDTO.getCelular() != null) {
+            cliente.setCelular(clienteDTO.getCelular());
+        }
+        if (clienteDTO.getEmail() != null) {
+            cliente.setEmail(clienteDTO.getEmail());
+        }
+        if (clienteDTO.getId() != null) {
+            cliente.setId(clienteDTO.getId());
+        }
+        if (clienteDTO.getEstado() != null) {
+            cliente.setEstado(clienteDTO.getEstado());
+        }
+
+        return cliente;
+    }
 }
