@@ -13,6 +13,7 @@ import todocode.hackacode.service.ServicioService;
 import todocode.hackacode.util.NotFoundException;
 import todocode.hackacode.util.ReferencedWarning;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -64,7 +65,7 @@ public class ServicioServiceImpl implements ServicioService {
         servicioRepository.deleteById(id);
     }
 
-    private ServicioDTO mapToDTO(final Servicio servicio, final ServicioDTO servicioDTO) {
+    public ServicioDTO mapToDTO(final Servicio servicio, final ServicioDTO servicioDTO) {
         servicioDTO.setId(servicio.getId());
         servicioDTO.setNombre(servicio.getNombre());
         servicioDTO.setDescripcion(servicio.getDescripcion());
@@ -75,7 +76,18 @@ public class ServicioServiceImpl implements ServicioService {
         return servicioDTO;
     }
 
-    private Servicio mapToEntity(final ServicioDTO servicioDTO, final Servicio servicio) {
+    public ServicioDTO mapToDTO(final Servicio servicio) {
+        ServicioDTO servicioDTO = new ServicioDTO();
+        servicioDTO.setId(servicio.getId());
+        servicioDTO.setNombre(servicio.getNombre());
+        servicioDTO.setDescripcion(servicio.getDescripcion());
+        servicioDTO.setFecha(servicio.getFecha());
+        servicioDTO.setDuracion(servicio.getDuracion());
+        servicioDTO.setEstado(servicio.getEstado());
+        servicioDTO.setPaqueteid(servicio.getPaqueteid() == null ? null : servicio.getPaqueteid().getId());
+        return servicioDTO;
+    }
+    public Servicio mapToEntity(final ServicioDTO servicioDTO, final Servicio servicio) {
         servicio.setNombre(servicioDTO.getNombre());
         servicio.setDescripcion(servicioDTO.getDescripcion());
         servicio.setFecha(servicioDTO.getFecha());
@@ -100,4 +112,43 @@ public class ServicioServiceImpl implements ServicioService {
         return null;
     }
 
+    public Servicio updateServicio(ServicioDTO servicioDTO, Servicio servicio) {
+        if (servicioDTO == null) {
+            return servicio;
+        }
+
+        if (servicioDTO.getNombre() != null) {
+            servicio.setNombre(servicioDTO.getNombre());
+        }
+        if (servicioDTO.getDescripcion() != null) {
+            servicio.setDescripcion(servicioDTO.getDescripcion());
+        }
+        if (servicioDTO.getFecha() != null) {
+            servicio.setFecha(servicioDTO.getFecha());
+        }
+        if (servicioDTO.getDuracion() != null) {
+            servicio.setDuracion(servicioDTO.getDuracion());
+        }
+        if (servicioDTO.getEstado() != null) {
+            servicio.setEstado(servicioDTO.getEstado());
+        }
+        if (servicioDTO.getPaqueteid() != null) {
+            Paquete paquete = new Paquete();
+            paquete.setId(servicioDTO.getPaqueteid());
+            servicio.setPaqueteid(paquete);
+        }
+
+        return servicio;
+    }
+
+    public List<ServicioDTO> mapToDTOList(List<Servicio> resultados) {
+        List<ServicioDTO>ServicioDTOs=new ArrayList<>();
+
+        for (Servicio servicio:resultados){
+            ServicioDTO servicioDTO=mapToDTO(servicio);
+            ServicioDTOs.add(servicioDTO);
+        }
+
+        return ServicioDTOs;
+    }
 }

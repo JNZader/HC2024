@@ -16,10 +16,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import todocode.hackacode.domain.Servicio;
 import todocode.hackacode.model.ServicioDTO;
+import todocode.hackacode.repos.ServicioRepository;
 import todocode.hackacode.service.impl.ServicioServiceImpl;
+import todocode.hackacode.util.NotFoundException;
 import todocode.hackacode.util.ReferencedException;
 import todocode.hackacode.util.ReferencedWarning;
 
@@ -29,11 +32,13 @@ public class ServicioResource {
 
     private final ServicioServiceImpl servicioServiceImpl;
     private final EntityManager entityManager;
+    private final ServicioRepository servicioRepository;
 
     @Autowired
-    public ServicioResource(final ServicioServiceImpl servicioServiceImpl, EntityManager entityManager) {
+    public ServicioResource(final ServicioServiceImpl servicioServiceImpl, EntityManager entityManager, ServicioRepository servicioRepository) {
         this.servicioServiceImpl = servicioServiceImpl;
         this.entityManager = entityManager;
+       this.servicioRepository = servicioRepository;
     }
     /**
      * Obtiene todos los servicios.
@@ -76,7 +81,13 @@ public class ServicioResource {
     @PutMapping("/{id}")
     public ResponseEntity<Long> updateServicio(@PathVariable(name = "id") final Long id,
             @RequestBody @Valid final ServicioDTO servicioDTO) {
-        servicioServiceImpl.update(id, servicioDTO);
+
+        Servicio servicio=servicioRepository.findById(id).orElseThrow(NotFoundException::new);
+
+        Servicio servicioActualizado=servicioServiceImpl.updateServicio(servicioDTO,servicio);
+
+        servicioServiceImpl.update(id, servicioServiceImpl.mapToDTO(servicioActualizado));
+
         return ResponseEntity.ok(id);
     }
     /**
@@ -87,6 +98,7 @@ public class ServicioResource {
      */
     @DeleteMapping("/{id}")
     @ApiResponse(responseCode = "204")
+    @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
     public ResponseEntity<Void> deleteServicio(@PathVariable(name = "id") final Long id) {
         final ReferencedWarning referencedWarning = servicioServiceImpl.getReferencedWarning(id);
         if (referencedWarning != null) {
@@ -109,7 +121,7 @@ public class ServicioResource {
 
         // Validación de atributos
         boolean atributoValido = false;
-        for (Field field : Servicio.class.getDeclaredFields()) {
+        for (Field field : ServicioDTO.class.getDeclaredFields()) {
             if (field.getName().equals(atributo)) {
                 atributoValido = true;
                 break;
@@ -122,7 +134,7 @@ public class ServicioResource {
         // Conversión de tipos
         Object valorConvertido = null;
         try {
-            valorConvertido = switch (Servicio.class.getDeclaredField(atributo).getType().getName()) {
+            valorConvertido = switch (ServicioDTO.class.getDeclaredField(atributo).getType().getName()) {
                 case "java.lang.Integer" ->
                     Integer.parseInt(valor);
                 case "java.lang.Double" ->
@@ -139,7 +151,9 @@ public class ServicioResource {
         }
 
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+
         CriteriaQuery<Servicio> criteriaQuery = criteriaBuilder.createQuery(Servicio.class);
+
         Root<Servicio> root = criteriaQuery.from(Servicio.class);
 
         Predicate predicate;
@@ -161,7 +175,10 @@ public class ServicioResource {
         criteriaQuery.select(root).where(predicate);
 
         List<Servicio> resultados = entityManager.createQuery(criteriaQuery).getResultList();
-        return ResponseEntity.ok(resultados);
+
+        List<ServicioDTO> resultadosDTOs=servicioServiceImpl.mapToDTOList(resultados);
+
+        return ResponseEntity.ok(resultadosDTOs);
     }
 
 }
