@@ -143,13 +143,13 @@ public class ServicioServiceImpl implements ServicioService {
     }
 
     public List<ServicioDTO> mapToDTOList(List<Servicio> resultados) {
-        List<ServicioDTO> ServicioDTOs = new ArrayList<>();
+        List<ServicioDTO> serviciosDTO = new ArrayList<>();
 
         for (Servicio servicio : resultados) {
             ServicioDTO servicioDTO = mapToDTO(servicio);
-            ServicioDTOs.add(servicioDTO);
+            serviciosDTO.add(servicioDTO);
         }
 
-        return ServicioDTOs;
+        return serviciosDTO;
     }
 }

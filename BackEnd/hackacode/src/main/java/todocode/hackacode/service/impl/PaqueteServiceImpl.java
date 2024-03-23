@@ -5,7 +5,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import todocode.hackacode.domain.Paquete;
 import todocode.hackacode.domain.Servicio;
-import todocode.hackacode.model.ClienteDTO;
 import todocode.hackacode.model.PaqueteDTO;
 import todocode.hackacode.repos.PaqueteRepository;
 import todocode.hackacode.repos.ServicioRepository;
