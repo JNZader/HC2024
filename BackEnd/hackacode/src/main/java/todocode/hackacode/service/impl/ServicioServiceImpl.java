@@ -87,6 +87,7 @@ public class ServicioServiceImpl implements ServicioService {
         servicioDTO.setPaqueteid(servicio.getPaqueteid() == null ? null : servicio.getPaqueteid().getId());
         return servicioDTO;
     }
+
     public Servicio mapToEntity(final ServicioDTO servicioDTO, final Servicio servicio) {
         servicio.setNombre(servicioDTO.getNombre());
         servicio.setDescripcion(servicioDTO.getDescripcion());
@@ -142,10 +143,10 @@ public class ServicioServiceImpl implements ServicioService {
     }
 
     public List<ServicioDTO> mapToDTOList(List<Servicio> resultados) {
-        List<ServicioDTO>ServicioDTOs=new ArrayList<>();
+        List<ServicioDTO> ServicioDTOs = new ArrayList<>();
 
-        for (Servicio servicio:resultados){
-            ServicioDTO servicioDTO=mapToDTO(servicio);
+        for (Servicio servicio : resultados) {
+            ServicioDTO servicioDTO = mapToDTO(servicio);
             ServicioDTOs.add(servicioDTO);
         }
 

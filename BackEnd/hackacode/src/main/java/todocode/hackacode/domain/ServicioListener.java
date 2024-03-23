@@ -3,9 +3,10 @@ package todocode.hackacode.domain;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.event.TransactionalEventListener;
 import todocode.hackacode.service.PaqueteService;
+
 /**
- * Componente que escucha eventos transaccionales relacionados
- * con la entidad Servicio.
+ * Componente que escucha eventos transaccionales relacionados con la entidad
+ * Servicio.
  */
 @Component
 public class ServicioListener {
@@ -15,6 +16,7 @@ public class ServicioListener {
     public ServicioListener(PaqueteService paqueteService) {
         this.paqueteService = paqueteService;
     }
+
     /**
      * Maneja el evento de persistencia posterior de un Servicio.
      *

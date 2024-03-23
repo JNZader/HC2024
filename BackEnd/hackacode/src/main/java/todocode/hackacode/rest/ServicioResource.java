@@ -38,8 +38,9 @@ public class ServicioResource {
     public ServicioResource(final ServicioServiceImpl servicioServiceImpl, EntityManager entityManager, ServicioRepository servicioRepository) {
         this.servicioServiceImpl = servicioServiceImpl;
         this.entityManager = entityManager;
-       this.servicioRepository = servicioRepository;
+        this.servicioRepository = servicioRepository;
     }
+
     /**
      * Obtiene todos los servicios.
      *
@@ -49,6 +50,7 @@ public class ServicioResource {
     public ResponseEntity<List<ServicioDTO>> getAllServicios() {
         return ResponseEntity.ok(servicioServiceImpl.findAll());
     }
+
     /**
      * Obtiene un servicio por su ID.
      *
@@ -59,6 +61,7 @@ public class ServicioResource {
     public ResponseEntity<ServicioDTO> getServicio(@PathVariable(name = "id") final Long id) {
         return ResponseEntity.ok(servicioServiceImpl.get(id));
     }
+
     /**
      * Crea un nuevo servicio.
      *
@@ -71,10 +74,11 @@ public class ServicioResource {
         final Long createdId = servicioServiceImpl.create(servicioDTO);
         return new ResponseEntity<>(createdId, HttpStatus.CREATED);
     }
+
     /**
      * Actualiza un servicio existente.
      *
-     * @param id         ID del servicio a actualizar.
+     * @param id ID del servicio a actualizar.
      * @param servicioDTO DTO con los datos actualizados del servicio.
      * @return ResponseEntity con el ID del servicio actualizado.
      */
@@ -82,14 +86,15 @@ public class ServicioResource {
     public ResponseEntity<Long> updateServicio(@PathVariable(name = "id") final Long id,
             @RequestBody @Valid final ServicioDTO servicioDTO) {
 
-        Servicio servicio=servicioRepository.findById(id).orElseThrow(NotFoundException::new);
+        Servicio servicio = servicioRepository.findById(id).orElseThrow(NotFoundException::new);
 
-        Servicio servicioActualizado=servicioServiceImpl.updateServicio(servicioDTO,servicio);
+        Servicio servicioActualizado = servicioServiceImpl.updateServicio(servicioDTO, servicio);
 
         servicioServiceImpl.update(id, servicioServiceImpl.mapToDTO(servicioActualizado));
 
         return ResponseEntity.ok(id);
     }
+
     /**
      * Elimina un servicio por su ID.
      *
@@ -107,13 +112,15 @@ public class ServicioResource {
         servicioServiceImpl.delete(id);
         return ResponseEntity.noContent().build();
     }
+
     /**
      * Busca servicios por un atributo específico.
      *
-     * @param atributo  Atributo por el cual buscar.
-     * @param valor     Valor del atributo por el cual buscar.
-     * @param operador  Operador de comparación (opcional).
-     * @return ResponseEntity con la lista de servicios que coinciden con la búsqueda.
+     * @param atributo Atributo por el cual buscar.
+     * @param valor Valor del atributo por el cual buscar.
+     * @param operador Operador de comparación (opcional).
+     * @return ResponseEntity con la lista de servicios que coinciden con la
+     * búsqueda.
      */
     @GetMapping("/buscar")
     public ResponseEntity<?> buscar(@RequestParam String atributo, @RequestParam String valor,
@@ -160,10 +167,14 @@ public class ServicioResource {
 
         if (operador != null) {
             switch (operador.toLowerCase()) {
-                case "mayor" -> predicate = criteriaBuilder.greaterThan(root.get(atributo), valorConvertido.toString());
-                case "menor" -> predicate = criteriaBuilder.lessThan(root.get(atributo), valorConvertido.toString());
-                case "igual" -> predicate = criteriaBuilder.equal(root.get(atributo), valorConvertido);
-                case "like" -> predicate = criteriaBuilder.like(root.get(atributo), "%" + valorConvertido + "%");
+                case "mayor" ->
+                    predicate = criteriaBuilder.greaterThan(root.get(atributo), valorConvertido.toString());
+                case "menor" ->
+                    predicate = criteriaBuilder.lessThan(root.get(atributo), valorConvertido.toString());
+                case "igual" ->
+                    predicate = criteriaBuilder.equal(root.get(atributo), valorConvertido);
+                case "like" ->
+                    predicate = criteriaBuilder.like(root.get(atributo), "%" + valorConvertido + "%");
                 default -> {
                     return ResponseEntity.badRequest().body("Operador no válido: " + operador);
                 }
@@ -176,7 +187,7 @@ public class ServicioResource {
 
         List<Servicio> resultados = entityManager.createQuery(criteriaQuery).getResultList();
 
-        List<ServicioDTO> resultadosDTOs=servicioServiceImpl.mapToDTOList(resultados);
+        List<ServicioDTO> resultadosDTOs = servicioServiceImpl.mapToDTOList(resultados);
 
         return ResponseEntity.ok(resultadosDTOs);
     }

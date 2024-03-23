@@ -35,8 +35,9 @@ public class PrecioResource {
     public PrecioResource(final PrecioServiceImpl precioServiceImpl, EntityManager entityManager, PrecioRepository precioRepository) {
         this.precioServiceImpl = precioServiceImpl;
         this.entityManager = entityManager;
-       this.precioRepository = precioRepository;
+        this.precioRepository = precioRepository;
     }
+
     /**
      * Obtiene todos los precios.
      *
@@ -46,6 +47,7 @@ public class PrecioResource {
     public ResponseEntity<List<PrecioDTO>> getAllPrecios() {
         return ResponseEntity.ok(precioServiceImpl.findAll());
     }
+
     /**
      * Obtiene un precio por su ID.
      *
@@ -56,6 +58,7 @@ public class PrecioResource {
     public ResponseEntity<PrecioDTO> getPrecio(@PathVariable(name = "id") final Long id) {
         return ResponseEntity.ok(precioServiceImpl.get(id));
     }
+
     /**
      * Crea un nuevo precio.
      *
@@ -68,24 +71,26 @@ public class PrecioResource {
         final Long createdId = precioServiceImpl.create(precioDTO);
         return new ResponseEntity<>(createdId, HttpStatus.CREATED);
     }
+
     /**
      * Actualiza un precio existente.
      *
-     * @param id         ID del precio a actualizar.
+     * @param id ID del precio a actualizar.
      * @param precioDTO DTO con los datos actualizados del precio.
      * @return ResponseEntity con el ID del precio actualizado.
      */
     @PutMapping("/{id}")
     public ResponseEntity<Long> updatePrecio(@PathVariable(name = "id") final Long id,
             @RequestBody @Valid final PrecioDTO precioDTO) {
-        Precio precio=precioRepository.findById(id).orElseThrow(NotFoundException::new);
+        Precio precio = precioRepository.findById(id).orElseThrow(NotFoundException::new);
 
-        Precio precioActualizado=precioServiceImpl.updatePrecio(precioDTO,precio);
+        Precio precioActualizado = precioServiceImpl.updatePrecio(precioDTO, precio);
 
         precioServiceImpl.update(id, precioServiceImpl.mapToDTO(precioActualizado));
 
         return ResponseEntity.ok(id);
     }
+
     /**
      * Elimina un precio por su ID.
      *
@@ -99,13 +104,15 @@ public class PrecioResource {
         precioServiceImpl.delete(id);
         return ResponseEntity.noContent().build();
     }
+
     /**
      * Busca precios por un atributo específico.
      *
-     * @param atributo  Atributo por el cual buscar.
-     * @param valor     Valor del atributo por el cual buscar.
-     * @param operador  Operador de comparación (opcional).
-     * @return ResponseEntity con la lista de precios que coinciden con la búsqueda.
+     * @param atributo Atributo por el cual buscar.
+     * @param valor Valor del atributo por el cual buscar.
+     * @param operador Operador de comparación (opcional).
+     * @return ResponseEntity con la lista de precios que coinciden con la
+     * búsqueda.
      */
     @GetMapping("/buscar")
     public ResponseEntity<?> buscar(@RequestParam String atributo, @RequestParam String valor,
@@ -148,9 +155,12 @@ public class PrecioResource {
 
         if (operador != null) {
             switch (operador.toLowerCase()) {
-                case "mayor" -> predicate = criteriaBuilder.greaterThan(root.get(atributo), valorConvertido.toString());
-                case "menor" -> predicate = criteriaBuilder.lessThan(root.get(atributo), valorConvertido.toString());
-                case "igual" -> predicate = criteriaBuilder.equal(root.get(atributo), valorConvertido);
+                case "mayor" ->
+                    predicate = criteriaBuilder.greaterThan(root.get(atributo), valorConvertido.toString());
+                case "menor" ->
+                    predicate = criteriaBuilder.lessThan(root.get(atributo), valorConvertido.toString());
+                case "igual" ->
+                    predicate = criteriaBuilder.equal(root.get(atributo), valorConvertido);
                 default -> {
                     return ResponseEntity.badRequest().body("Operador no válido: " + operador);
                 }
@@ -163,7 +173,7 @@ public class PrecioResource {
 
         List<Precio> resultados = entityManager.createQuery(criteriaQuery).getResultList();
 
-        List<PrecioDTO>resultadoDtos=precioServiceImpl.mapToDTOList(resultados);
+        List<PrecioDTO> resultadoDtos = precioServiceImpl.mapToDTOList(resultados);
 
         return ResponseEntity.ok(resultadoDtos);
     }

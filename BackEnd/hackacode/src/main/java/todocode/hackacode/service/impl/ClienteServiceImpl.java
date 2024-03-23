@@ -86,6 +86,7 @@ public class ClienteServiceImpl implements ClienteService {
         clienteDTO.setEstado(cliente.getEstado());
         return clienteDTO;
     }
+
     public List<ClienteDTO> mapToDTOList(List<Cliente> clientes) {
         List<ClienteDTO> clienteDTOs = new ArrayList<>();
 
