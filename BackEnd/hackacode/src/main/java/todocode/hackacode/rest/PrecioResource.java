@@ -15,10 +15,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import todocode.hackacode.domain.Precio;
 import todocode.hackacode.model.PrecioDTO;
+import todocode.hackacode.repos.PrecioRepository;
 import todocode.hackacode.service.impl.PrecioServiceImpl;
+import todocode.hackacode.util.NotFoundException;
 
 @RestController
 @RequestMapping(value = "/api/precios", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -26,11 +29,13 @@ public class PrecioResource {
 
     private final PrecioServiceImpl precioServiceImpl;
     private final EntityManager entityManager;
+    private final PrecioRepository precioRepository;
 
     @Autowired
-    public PrecioResource(final PrecioServiceImpl precioServiceImpl, EntityManager entityManager) {
+    public PrecioResource(final PrecioServiceImpl precioServiceImpl, EntityManager entityManager, PrecioRepository precioRepository) {
         this.precioServiceImpl = precioServiceImpl;
         this.entityManager = entityManager;
+       this.precioRepository = precioRepository;
     }
     /**
      * Obtiene todos los precios.
@@ -73,7 +78,12 @@ public class PrecioResource {
     @PutMapping("/{id}")
     public ResponseEntity<Long> updatePrecio(@PathVariable(name = "id") final Long id,
             @RequestBody @Valid final PrecioDTO precioDTO) {
-        precioServiceImpl.update(id, precioDTO);
+        Precio precio=precioRepository.findById(id).orElseThrow(NotFoundException::new);
+
+        Precio precioActualizado=precioServiceImpl.updatePrecio(precioDTO,precio);
+
+        precioServiceImpl.update(id, precioServiceImpl.mapToDTO(precioActualizado));
+
         return ResponseEntity.ok(id);
     }
     /**
@@ -84,6 +94,7 @@ public class PrecioResource {
      */
     @DeleteMapping("/{id}")
     @ApiResponse(responseCode = "204")
+    @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
     public ResponseEntity<Void> deletePrecio(@PathVariable(name = "id") final Long id) {
         precioServiceImpl.delete(id);
         return ResponseEntity.noContent().build();
@@ -102,7 +113,7 @@ public class PrecioResource {
 
         // Validación de atributos
         boolean atributoValido = false;
-        for (Field field : Precio.class.getDeclaredFields()) {
+        for (Field field : PrecioDTO.class.getDeclaredFields()) {
             if (field.getName().equals(atributo)) {
                 atributoValido = true;
                 break;
@@ -115,7 +126,7 @@ public class PrecioResource {
         // Conversión de tipos
         Object valorConvertido = null;
         try {
-            valorConvertido = switch (Precio.class.getDeclaredField(atributo).getType().getName()) {
+            valorConvertido = switch (PrecioDTO.class.getDeclaredField(atributo).getType().getName()) {
                 case "java.lang.Long" ->
                     Long.parseLong(valor);
                 case "java.lang.Double" ->
@@ -128,7 +139,9 @@ public class PrecioResource {
         }
 
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+
         CriteriaQuery<Precio> criteriaQuery = criteriaBuilder.createQuery(Precio.class);
+
         Root<Precio> root = criteriaQuery.from(Precio.class);
 
         Predicate predicate;
@@ -149,7 +162,10 @@ public class PrecioResource {
         criteriaQuery.select(root).where(predicate);
 
         List<Precio> resultados = entityManager.createQuery(criteriaQuery).getResultList();
-        return ResponseEntity.ok(resultados);
+
+        List<PrecioDTO>resultadoDtos=precioServiceImpl.mapToDTOList(resultados);
+
+        return ResponseEntity.ok(resultadoDtos);
     }
 
 }
