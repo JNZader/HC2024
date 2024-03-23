@@ -18,23 +18,25 @@ import java.util.UUID;
 @AllArgsConstructor
 @Builder
 public class Usuario {
-   @Id
-   @GeneratedValue(strategy = GenerationType.UUID)
-   @Column(name = "user_id")
-   private UUID id;
 
-   private String username;
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "user_id")
+    private UUID id;
 
-   private String password;
+    private String username;
 
-   private Cargo rol;
+    private String password;
 
-   private Boolean passTemporaria;
+    private Cargo rol;
 
-   @OneToOne(mappedBy = "usuario", fetch = FetchType.LAZY)
-   private Empleado empleado;
-   public boolean isLoginCorrect(LoginRequest loginRequest, BCryptPasswordEncoder passwordEncoder){
-      return passwordEncoder.matches(loginRequest.password(),this.password);
-   }
+    private Boolean passTemporaria;
+
+    @OneToOne(mappedBy = "usuario", fetch = FetchType.LAZY)
+    private Empleado empleado;
+
+    public boolean isLoginCorrect(LoginRequest loginRequest, BCryptPasswordEncoder passwordEncoder) {
+        return passwordEncoder.matches(loginRequest.password(), this.password);
+    }
 
 }

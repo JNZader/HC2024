@@ -120,10 +120,10 @@ public class PaqueteServiceImpl implements PaqueteService {
     }
 
     public List<PaqueteDTO> mapToDTOList(List<Paquete> resultados) {
-        List<PaqueteDTO>paqueteDTOS=new ArrayList<>();
+        List<PaqueteDTO> paqueteDTOS = new ArrayList<>();
 
-        for (Paquete paquete:resultados){
-            PaqueteDTO paqueteDTO=mapToDTO(paquete);
+        for (Paquete paquete : resultados) {
+            PaqueteDTO paqueteDTO = mapToDTO(paquete);
             paqueteDTOS.add(paqueteDTO);
         }
 
