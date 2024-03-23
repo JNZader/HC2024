@@ -15,13 +15,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import todocode.hackacode.domain.Empleado;
 import todocode.hackacode.domain.Usuario;
 import todocode.hackacode.model.EmpleadoDTO;
+import todocode.hackacode.repos.EmpleadoRepository;
 import todocode.hackacode.repos.UsuarioRepository;
+import todocode.hackacode.service.EmpleadoService;
 import todocode.hackacode.service.impl.EmpleadoServiceImpl;
+import todocode.hackacode.util.NotFoundException;
 import todocode.hackacode.util.ReferencedException;
 import todocode.hackacode.util.ReferencedWarning;
 
@@ -31,13 +35,15 @@ public class EmpleadoResource {
 
     private final EmpleadoServiceImpl empleadoServiceImpl;
     private final EntityManager entityManager;
+    private final EmpleadoRepository empleadoRepository;
     private final UsuarioRepository usuarioRepository;
     private final BCryptPasswordEncoder passwordEncoder;
 
     @Autowired
-    public EmpleadoResource(final EmpleadoServiceImpl empleadoServiceImpl, EntityManager entityManager, UsuarioRepository usuarioRepository, BCryptPasswordEncoder passwordEncoder) {
+    public EmpleadoResource(final EmpleadoServiceImpl empleadoServiceImpl, EmpleadoRepository empleadoRepository, EntityManager entityManager, UsuarioRepository usuarioRepository, BCryptPasswordEncoder passwordEncoder) {
         this.empleadoServiceImpl = empleadoServiceImpl;
-        this.entityManager = entityManager;
+       this.empleadoRepository = empleadoRepository;
+       this.entityManager = entityManager;
        this.usuarioRepository = usuarioRepository;
        this.passwordEncoder = passwordEncoder;
     }
@@ -94,7 +100,13 @@ public class EmpleadoResource {
     @PutMapping("/{id}")
     public ResponseEntity<Long> updateEmpleado(@PathVariable(name = "id") final Long id,
             @RequestBody @Valid final EmpleadoDTO empleadoDTO) {
-        empleadoServiceImpl.update(id, empleadoDTO);
+        Empleado empleado= empleadoRepository.findById(id).orElseThrow(NotFoundException::new);
+
+        Empleado empleadoActualizado=empleadoServiceImpl.updateEmpleado(empleadoDTO,empleado);
+
+        empleadoServiceImpl.update(id, empleadoServiceImpl.mapToDTO(empleadoActualizado,
+              empleadoDTO));
+
         return ResponseEntity.ok(id);
     }
     /**
@@ -105,6 +117,7 @@ public class EmpleadoResource {
      */
     @DeleteMapping("/{id}")
     @ApiResponse(responseCode = "204")
+    @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
     public ResponseEntity<Void> deleteEmpleado(@PathVariable(name = "id") final Long id) {
         final ReferencedWarning referencedWarning = empleadoServiceImpl.getReferencedWarning(id);
         if (referencedWarning != null) {
@@ -127,7 +140,7 @@ public class EmpleadoResource {
 
         // Validación de atributos
         boolean atributoValido = false;
-        for (Field field : Empleado.class.getDeclaredFields()) {
+        for (Field field : EmpleadoDTO.class.getDeclaredFields()) {
             if (field.getName().equals(atributo)) {
                 atributoValido = true;
                 break;
@@ -140,7 +153,8 @@ public class EmpleadoResource {
         // Conversión de tipos
         Object valorConvertido = null;
         try {
-            valorConvertido = switch (Empleado.class.getDeclaredField(atributo).getType().getName()) {
+            valorConvertido =
+                  switch (EmpleadoDTO.class.getDeclaredField(atributo).getType().getName()) {
                 case "java.lang.Double" ->
                     Double.parseDouble(valor);
                 case "java.lang.Integer" ->
@@ -155,7 +169,9 @@ public class EmpleadoResource {
         }
 
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+
         CriteriaQuery<Empleado> criteriaQuery = criteriaBuilder.createQuery(Empleado.class);
+
         Root<Empleado> root = criteriaQuery.from(Empleado.class);
 
         Predicate predicate;
@@ -177,7 +193,10 @@ public class EmpleadoResource {
         criteriaQuery.select(root).where(predicate);
 
         List<Empleado> resultados = entityManager.createQuery(criteriaQuery).getResultList();
-        return ResponseEntity.ok(resultados);
+
+        List<EmpleadoDTO> resultadoDTOS=empleadoServiceImpl.mapToDTOList(resultados);
+
+        return ResponseEntity.ok(resultadoDTOS);
     }
 
 }
