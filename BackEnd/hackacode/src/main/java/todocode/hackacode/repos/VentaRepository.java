@@ -8,6 +8,7 @@ import todocode.hackacode.domain.Cliente;
 import todocode.hackacode.domain.Empleado;
 import todocode.hackacode.domain.Paquete;
 import todocode.hackacode.domain.Venta;
+
 @Repository
 public interface VentaRepository extends JpaRepository<Venta, Long> {
 

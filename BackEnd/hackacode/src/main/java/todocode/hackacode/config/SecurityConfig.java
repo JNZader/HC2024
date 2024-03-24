@@ -22,44 +22,76 @@ import org.springframework.security.web.SecurityFilterChain;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 
+/**
+ * Configuración de seguridad para la aplicación.
+ */
 @Configuration
-@EnableWebSecurity
-public class SecurityConfig  {
+@EnableWebSecurity // Habilita la configuración de seguridad web de Spring Security.
+public class SecurityConfig {
 
-   @Value("${jwt.public.key}")
-   private RSAPublicKey publicKey;
-   @Value("${jwt.private.key}")
-   private RSAPrivateKey privateKey;
+    @Value("${jwt.public.key}")
+    private RSAPublicKey publicKey;
+    @Value("${jwt.private.key}")
+    private RSAPrivateKey privateKey;
 
-   @Bean
-   public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception{
-      httpSecurity
-            .authorizeHttpRequests(authorize->authorize
-                  .requestMatchers(HttpMethod.POST,"/login").permitAll()
-                  .requestMatchers(HttpMethod.POST,"/crear").permitAll()
-                  .requestMatchers(HttpMethod.POST,"/cambiar-pass").permitAll()
-                  .anyRequest().authenticated())
-            .oauth2ResourceServer(oauth2->oauth2.jwt(Customizer.withDefaults()))
-            .sessionManagement(session-> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .csrf(csrf -> csrf.disable() /*csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse
-            ())*/);
-      return httpSecurity.build();
-   }
+    /**
+     * Configuración del filtro de seguridad HTTP.
+     *
+     * @param httpSecurity Configuración de seguridad HTTP.
+     * @return SecurityFilterChain configurado.
+     * @throws Exception Excepción si hay un error durante la configuración.
+     */
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
 
-   @Bean
-   public JwtDecoder jwtDecoder(){
-      return NimbusJwtDecoder.withPublicKey(publicKey).build();
-   }
+        httpSecurity
+                // Configura la autorización de las solicitudes HTTP
+                .authorizeHttpRequests(authorize -> authorize
+                .requestMatchers("/v3/api-docs", "/swagger-ui/**").permitAll()
+                .requestMatchers(HttpMethod.POST, "/login").permitAll() // Permite el acceso a /login sin autenticación
+                .requestMatchers(HttpMethod.POST, "/crear").permitAll() // Permite el acceso a /crear sin autenticación
+                .requestMatchers(HttpMethod.POST, "/cambiar-pass").permitAll() // Permite el acceso a /cambiar-pass sin autenticación
+                .anyRequest().authenticated()) // Cualquier otra solicitud requiere autenticación
+                .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults())) // Configura el servidor de recursos OAuth2 con JWT
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Configura la gestión de sesiones como STATELESS
+                .csrf(csrf -> csrf.disable() /*csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse
+            ())*/); // Deshabilita la protección CSRF
+        return httpSecurity.build();
+    }
 
-   @Bean
-   public JwtEncoder jwtEncoder(){
-      JWK jwk=new RSAKey.Builder(this.publicKey).privateKey(privateKey).build();
-      var jwks= new ImmutableJWKSet<>(new JWKSet(jwk));
-      return new NimbusJwtEncoder(jwks);
-   }
+    /**
+     * Bean para decodificar JWT.
+     *
+     * @return JwtDecoder configurado.
+     */
+    @Bean
+    public JwtDecoder jwtDecoder() {
+        return NimbusJwtDecoder.withPublicKey(publicKey).build(); // Crea un decodificador JWT con la clave pública
+    }
 
-   @Bean
-   public BCryptPasswordEncoder bCryptPasswordEncoder(){
-      return new BCryptPasswordEncoder();
-   }
+    /**
+     * Bean para codificar JWT.
+     *
+     * @return JwtEncoder configurado.
+     */
+    @Bean
+    public JwtEncoder jwtEncoder() {
+        // Crea un objeto JWK con la clave pública y privada
+        JWK jwk = new RSAKey.Builder(this.publicKey).privateKey(privateKey).build();
+        // Crea un conjunto de claves JWK inmutable
+        var jwks = new ImmutableJWKSet<>(new JWKSet(jwk));
+        // Crea un codificador JWT con el conjunto de claves JWK
+        return new NimbusJwtEncoder(jwks);
+    }
+
+    /**
+     * Bean para codificar contraseñas usando BCrypt.
+     *
+     * @return BCryptPasswordEncoder configurado.
+     */
+    @Bean
+    public BCryptPasswordEncoder bCryptPasswordEncoder() {
+        return new BCryptPasswordEncoder(); // Crea un codificador de contraseñas BCrypt
+    }
+
 }

@@ -7,27 +7,20 @@ import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import jakarta.validation.Valid;
-
-import java.lang.reflect.Field;
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import todocode.hackacode.domain.Paquete;
 import todocode.hackacode.domain.Servicio;
 import todocode.hackacode.model.ServicioDTO;
-import todocode.hackacode.repos.PaqueteRepository;
-import todocode.hackacode.service.ServicioService;
 import todocode.hackacode.service.impl.ServicioServiceImpl;
-import todocode.hackacode.util.CustomCollectors;
 import todocode.hackacode.util.ReferencedException;
 import todocode.hackacode.util.ReferencedWarning;
+
+import java.lang.reflect.Field;
+import java.time.LocalDate;
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "/api/servicios", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -41,31 +34,56 @@ public class ServicioResource {
         this.servicioServiceImpl = servicioServiceImpl;
         this.entityManager = entityManager;
     }
-
+    /**
+     * Obtiene todos los servicios.
+     *
+     * @return ResponseEntity con la lista de servicios.
+     */
     @GetMapping
     public ResponseEntity<List<ServicioDTO>> getAllServicios() {
         return ResponseEntity.ok(servicioServiceImpl.findAll());
     }
-
+    /**
+     * Obtiene un servicio por su ID.
+     *
+     * @param id ID del servicio.
+     * @return ResponseEntity con el servicio encontrado.
+     */
     @GetMapping("/{id}")
     public ResponseEntity<ServicioDTO> getServicio(@PathVariable(name = "id") final Long id) {
         return ResponseEntity.ok(servicioServiceImpl.get(id));
     }
-
+    /**
+     * Crea un nuevo servicio.
+     *
+     * @param servicioDTO DTO del servicio a crear.
+     * @return ResponseEntity con el ID del servicio creado.
+     */
     @PostMapping
     @ApiResponse(responseCode = "201")
     public ResponseEntity<Long> createServicio(@RequestBody @Valid final ServicioDTO servicioDTO) {
         final Long createdId = servicioServiceImpl.create(servicioDTO);
         return new ResponseEntity<>(createdId, HttpStatus.CREATED);
     }
-
+    /**
+     * Actualiza un servicio existente.
+     *
+     * @param id         ID del servicio a actualizar.
+     * @param servicioDTO DTO con los datos actualizados del servicio.
+     * @return ResponseEntity con el ID del servicio actualizado.
+     */
     @PutMapping("/{id}")
     public ResponseEntity<Long> updateServicio(@PathVariable(name = "id") final Long id,
             @RequestBody @Valid final ServicioDTO servicioDTO) {
         servicioServiceImpl.update(id, servicioDTO);
         return ResponseEntity.ok(id);
     }
-
+    /**
+     * Elimina un servicio por su ID.
+     *
+     * @param id ID del servicio a eliminar.
+     * @return ResponseEntity que indica el éxito de la operación.
+     */
     @DeleteMapping("/{id}")
     @ApiResponse(responseCode = "204")
     public ResponseEntity<Void> deleteServicio(@PathVariable(name = "id") final Long id) {
@@ -76,7 +94,14 @@ public class ServicioResource {
         servicioServiceImpl.delete(id);
         return ResponseEntity.noContent().build();
     }
-
+    /**
+     * Busca servicios por un atributo específico.
+     *
+     * @param atributo  Atributo por el cual buscar.
+     * @param valor     Valor del atributo por el cual buscar.
+     * @param operador  Operador de comparación (opcional).
+     * @return ResponseEntity con la lista de servicios que coinciden con la búsqueda.
+     */
     @GetMapping("/buscar")
     public ResponseEntity<?> buscar(@RequestParam String atributo, @RequestParam String valor,
             @RequestParam(required = false) String operador) {
@@ -120,20 +145,13 @@ public class ServicioResource {
 
         if (operador != null) {
             switch (operador.toLowerCase()) {
-                case "mayor":
-                    predicate = criteriaBuilder.greaterThan(root.get(atributo), valorConvertido.toString());
-                    break;
-                case "menor":
-                    predicate = criteriaBuilder.lessThan(root.get(atributo), valorConvertido.toString());
-                    break;
-                case "igual":
-                    predicate = criteriaBuilder.equal(root.get(atributo), valorConvertido);
-                    break;
-                case "like":
-                    predicate = criteriaBuilder.like(root.get(atributo), "%" + valorConvertido + "%");
-                    break;
-                default:
+                case "mayor" -> predicate = criteriaBuilder.greaterThan(root.get(atributo), valorConvertido.toString());
+                case "menor" -> predicate = criteriaBuilder.lessThan(root.get(atributo), valorConvertido.toString());
+                case "igual" -> predicate = criteriaBuilder.equal(root.get(atributo), valorConvertido);
+                case "like" -> predicate = criteriaBuilder.like(root.get(atributo), "%" + valorConvertido + "%");
+                default -> {
                     return ResponseEntity.badRequest().body("Operador no válido: " + operador);
+                }
             }
         } else {
             predicate = criteriaBuilder.equal(root.get(atributo), valorConvertido);

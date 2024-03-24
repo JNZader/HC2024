@@ -14,32 +14,44 @@ import java.util.List;
 @RestController
 public class UsuarioController {
 
-   private UsuarioRepository usuarioRepository;
-   private BCryptPasswordEncoder passwordEncoder;
+    private final UsuarioRepository usuarioRepository;
+    private final BCryptPasswordEncoder passwordEncoder;
 
-   @Autowired
-   public UsuarioController(UsuarioRepository usuarioRepository){
-      this.usuarioRepository=usuarioRepository;
-      this.passwordEncoder=passwordEncoder;
-   }
+    @Autowired
+    public UsuarioController(UsuarioRepository usuarioRepository, BCryptPasswordEncoder passwordEncoder) {
+        this.usuarioRepository = usuarioRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
 
-   @PostMapping("/crear")
-   public ResponseEntity<?> crearUsuario(@RequestBody CrearUsuarioDTO crearUsuarioDTO){
-      Usuario usuario = new Usuario();
-      usuario.setUsername(crearUsuarioDTO.username());
-      usuario.setPassword(passwordEncoder.encode(crearUsuarioDTO.password()));
-      usuario.setRol(crearUsuarioDTO.cargo());
-      usuario.setPassTemporaria(false);
+    /**
+     * Crea un nuevo usuario.
+     *
+     * @param crearUsuarioDTO Objeto que contiene la información del nuevo
+     * usuario.
+     * @return ResponseEntity con el usuario creado.
+     */
+    @PostMapping("/crear")
+    public ResponseEntity<?> crearUsuario(@RequestBody CrearUsuarioDTO crearUsuarioDTO) {
+        Usuario usuario = new Usuario();
+        usuario.setUsername(crearUsuarioDTO.username());
+        usuario.setPassword(passwordEncoder.encode(crearUsuarioDTO.password()));
+        usuario.setRol(crearUsuarioDTO.cargo());
+        usuario.setPassTemporaria(false);
 
-      Usuario savedUsuario = usuarioRepository.save(usuario);
-      return ResponseEntity.ok(savedUsuario);
-   }
+        Usuario savedUsuario = usuarioRepository.save(usuario);
+        return ResponseEntity.ok(savedUsuario);
+    }
 
-   @GetMapping("/listar")
-   @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
-   public ResponseEntity<List<Usuario>> listarUsuarios(){
-      var users=usuarioRepository.findAll();
+    /**
+     * Lista todos los usuarios.
+     *
+     * @return ResponseEntity con la lista de usuarios.
+     */
+    @GetMapping("/listar")
+    @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
+    public ResponseEntity<List<Usuario>> listarUsuarios() {
+        var users = usuarioRepository.findAll();
 
-      return ResponseEntity.ok(users);
-   }
+        return ResponseEntity.ok(users);
+    }
 }

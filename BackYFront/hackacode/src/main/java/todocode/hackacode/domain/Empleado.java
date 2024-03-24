@@ -1,22 +1,17 @@
 package todocode.hackacode.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
-import java.util.Set;
-
-import lombok.*;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import todocode.hackacode.model.Cargo;
 
+import java.util.Set;
+
 @Entity
-@Table(name = "Empleadoes")
+@Table(name = "Empleados")
 @Data
 @EqualsAndHashCode(callSuper = true)
 @SuperBuilder
@@ -36,10 +31,20 @@ public class Empleado extends Persona {
     @Column
     private Double sueldo;
 
+    @Column(nullable = false, unique = true)
+    private String email;
+
+    @Column(nullable = false, unique = true)
+    private String dni;
+
     @Column(nullable = false)
     private Boolean estado;
 
     @OneToMany(mappedBy = "empleadoid")
     private Set<Venta> ventas;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "usuario_id", unique = true)
+    private Usuario usuario;
 
 }

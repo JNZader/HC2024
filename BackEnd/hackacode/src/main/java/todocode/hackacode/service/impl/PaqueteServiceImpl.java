@@ -13,6 +13,7 @@ import todocode.hackacode.service.PaqueteService;
 import todocode.hackacode.util.NotFoundException;
 import todocode.hackacode.util.ReferencedWarning;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -117,4 +118,44 @@ public class PaqueteServiceImpl implements PaqueteService {
         return null;
     }
 
+    public List<PaqueteDTO> mapToDTOList(List<Paquete> resultados) {
+        List<PaqueteDTO> paqueteDTOS = new ArrayList<>();
+
+        for (Paquete paquete : resultados) {
+            PaqueteDTO paqueteDTO = mapToDTO(paquete);
+            paqueteDTOS.add(paqueteDTO);
+        }
+
+        return paqueteDTOS;
+    }
+
+    public Paquete updatePaquete(PaqueteDTO paqueteDTO, Paquete paquete) {
+        if (paqueteDTO == null) {
+            return paquete;
+        }
+
+        if (paqueteDTO.getTipo() != null) {
+            paquete.setTipo(paqueteDTO.getTipo());
+        }
+        if (paqueteDTO.getNombre() != null) {
+            paquete.setNombre(paqueteDTO.getNombre());
+        }
+        if (paqueteDTO.getDescripcionBreve() != null) {
+            paquete.setDescripcionBreve(paqueteDTO.getDescripcionBreve());
+        }
+        if (paqueteDTO.getPrecioVenta() != null) {
+            paquete.setPrecioVenta(paqueteDTO.getPrecioVenta());
+        }
+        if (paqueteDTO.getDuracion() != null) {
+            paquete.setDuracion(paqueteDTO.getDuracion());
+        }
+        if (paqueteDTO.getEstado() != null) {
+            paquete.setEstado(paqueteDTO.getEstado());
+        }
+        if (paqueteDTO.getId() != null) {
+            paquete.setId(paqueteDTO.getId());
+        }
+
+        return paquete;
+    }
 }

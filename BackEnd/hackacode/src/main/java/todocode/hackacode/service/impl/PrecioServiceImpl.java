@@ -10,6 +10,7 @@ import todocode.hackacode.repos.ServicioRepository;
 import todocode.hackacode.service.PrecioService;
 import todocode.hackacode.util.NotFoundException;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -59,7 +60,7 @@ public class PrecioServiceImpl implements PrecioService {
         precioRepository.deleteById(id);
     }
 
-    private PrecioDTO mapToDTO(final Precio precio, final PrecioDTO precioDTO) {
+    public PrecioDTO mapToDTO(final Precio precio, final PrecioDTO precioDTO) {
         precioDTO.setId(precio.getId());
         precioDTO.setIdServico(precio.getIdServico());
         precioDTO.setCosto(precio.getCosto());
@@ -68,7 +69,17 @@ public class PrecioServiceImpl implements PrecioService {
         return precioDTO;
     }
 
-    private Precio mapToEntity(final PrecioDTO precioDTO, final Precio precio) {
+    public PrecioDTO mapToDTO(final Precio precio) {
+        PrecioDTO precioDTO = new PrecioDTO();
+        precioDTO.setId(precio.getId());
+        precioDTO.setIdServico(precio.getIdServico());
+        precioDTO.setCosto(precio.getCosto());
+        precioDTO.setPrecioVenta(precio.getPrecioVenta());
+        precioDTO.setIdServicio(precio.getIdServicio() == null ? null : precio.getIdServicio().getId());
+        return precioDTO;
+    }
+
+    public Precio mapToEntity(final PrecioDTO precioDTO, final Precio precio) {
         precio.setIdServico(precioDTO.getIdServico());
         precio.setCosto(precioDTO.getCosto());
         precio.setPrecioVenta(precioDTO.getPrecioVenta());
@@ -82,4 +93,35 @@ public class PrecioServiceImpl implements PrecioService {
         return precioRepository.existsByIdServicioId(id);
     }
 
+    public Precio updatePrecio(PrecioDTO precioDTO, Precio precio) {
+        if (precioDTO == null) {
+            return precio;
+        }
+
+        if (precioDTO.getIdServico() != null) {
+            precio.setIdServico(precioDTO.getIdServico());
+        }
+        if (precioDTO.getCosto() != null) {
+            precio.setCosto(precioDTO.getCosto());
+        }
+        if (precioDTO.getPrecioVenta() != null) {
+            precio.setPrecioVenta(precioDTO.getPrecioVenta());
+        }
+        if (precioDTO.getId() != null) {
+            precio.setId(precioDTO.getId());
+        }
+
+        return precio;
+    }
+
+    public List<PrecioDTO> mapToDTOList(List<Precio> resultados) {
+        List<PrecioDTO> precioDTOS = new ArrayList<>();
+
+        for (Precio precio : resultados) {
+            PrecioDTO precioDTO = mapToDTO(precio);
+            precioDTOS.add(precioDTO);
+        }
+
+        return precioDTOS;
+    }
 }

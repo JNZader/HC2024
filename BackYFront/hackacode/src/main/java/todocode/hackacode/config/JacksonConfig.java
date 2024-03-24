@@ -6,17 +6,29 @@ import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilde
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * Configuración personalizada de Jackson para la aplicación.
+ */
 @Configuration
 public class JacksonConfig {
 
-    @Bean
-    public Jackson2ObjectMapperBuilderCustomizer jacksonCustomizer() {
-        return jacksonObjectMapperBuilder -> jacksonObjectMapperBuilder
-                .featuresToDisable(
-                        DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES,
-                        DeserializationFeature.ACCEPT_FLOAT_AS_INT,
-                        SerializationFeature.WRITE_DATES_AS_TIMESTAMPS
-                );
-    }
+   /**
+    * Bean que personaliza el constructor de objetos ObjectMapper de Jackson.
+    *
+    * @return Jackson2ObjectMapperBuilderCustomizer personalizado.
+    */
+   @Bean
+   public Jackson2ObjectMapperBuilderCustomizer jacksonCustomizer() {
+      // Personaliza el constructor de objetos ObjectMapper de Jackson
+      return jacksonObjectMapperBuilder -> jacksonObjectMapperBuilder
+            // Deshabilita la deserialización de propiedades desconocidas
+            .featuresToDisable(
+                  DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES,
+                  // Acepta números flotantes como enteros si es posible
+                  DeserializationFeature.ACCEPT_FLOAT_AS_INT,
+                  // Escribe fechas como marcas de tiempo en lugar de objetos Date
+                  SerializationFeature.WRITE_DATES_AS_TIMESTAMPS
+            );
+   }
 
 }

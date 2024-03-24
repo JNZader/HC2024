@@ -14,8 +14,10 @@ import todocode.hackacode.service.EmpleadoService;
 import todocode.hackacode.util.NotFoundException;
 import todocode.hackacode.util.ReferencedWarning;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Logger;
 
 @Service
 public class EmpleadoServiceImpl implements EmpleadoService {
@@ -26,10 +28,10 @@ public class EmpleadoServiceImpl implements EmpleadoService {
 
     @Autowired
     public EmpleadoServiceImpl(final EmpleadoRepository empleadoRepository,
-                               final VentaRepository ventaRepository, UsuarioRepository usuarioRepository) {
+            final VentaRepository ventaRepository, UsuarioRepository usuarioRepository) {
         this.empleadoRepository = empleadoRepository;
         this.ventaRepository = ventaRepository;
-       this.usuarioRepository = usuarioRepository;
+        this.usuarioRepository = usuarioRepository;
     }
 
     @Override
@@ -80,7 +82,7 @@ public class EmpleadoServiceImpl implements EmpleadoService {
         empleadoDTO.setCargo(empleado.getCargo());
         empleadoDTO.setSueldo(empleado.getSueldo());
         empleadoDTO.setEstado(empleado.getEstado());
-        empleadoDTO.setUsuario_id(empleado.getUsuario().getId());
+        empleadoDTO.setIdUsuario(empleado.getUsuario().getId());
         return empleadoDTO;
     }
 
@@ -98,10 +100,11 @@ public class EmpleadoServiceImpl implements EmpleadoService {
         empleado.setEstado(empleadoDTO.getEstado());
         Usuario usuario = null;
         try {
-            Optional<Usuario> optionalUsuario = usuarioRepository.findById(empleadoDTO.getUsuario_id());
+            Optional<Usuario> optionalUsuario = usuarioRepository.findById(empleadoDTO.getIdUsuario());
             usuario = optionalUsuario.orElse(new Usuario());
         } catch (Exception e) {
-            System.out.println("AAAAA");
+            Logger logger = Logger.getLogger(getClass().getName());
+            logger.info("Error en mapToEntity");
         }
         empleado.setUsuario(usuario);
         return empleado;
@@ -118,5 +121,69 @@ public class EmpleadoServiceImpl implements EmpleadoService {
             return referencedWarning;
         }
         return null;
+    }
+
+    public Empleado updateEmpleado(EmpleadoDTO empleadoDTO, Empleado empleado) {
+        if (empleadoDTO == null) {
+            return empleado;
+        }
+
+        if (empleadoDTO.getNombre() != null) {
+            empleado.setNombre(empleadoDTO.getNombre());
+        }
+        if (empleadoDTO.getApellido() != null) {
+            empleado.setApellido(empleadoDTO.getApellido());
+        }
+        if (empleadoDTO.getDireccion() != null) {
+            empleado.setDireccion(empleadoDTO.getDireccion());
+        }
+        if (empleadoDTO.getDni() != null) {
+            empleado.setDni(empleadoDTO.getDni());
+        }
+        if (empleadoDTO.getFechaNacimiento() != null) {
+            empleado.setFechaNacimiento(empleadoDTO.getFechaNacimiento());
+        }
+        if (empleadoDTO.getNacionalidad() != null) {
+            empleado.setNacionalidad(empleadoDTO.getNacionalidad());
+        }
+        if (empleadoDTO.getCelular() != null) {
+            empleado.setCelular(empleadoDTO.getCelular());
+        }
+        if (empleadoDTO.getEmail() != null) {
+            empleado.setEmail(empleadoDTO.getEmail());
+        }
+        if (empleadoDTO.getId() != null) {
+            empleado.setId(empleadoDTO.getId());
+        }
+        if (empleadoDTO.getCargo() != null) {
+            empleado.setCargo(empleadoDTO.getCargo());
+        }
+        if (empleadoDTO.getSueldo() != null) {
+            empleado.setSueldo(empleadoDTO.getSueldo());
+        }
+        if (empleadoDTO.getEstado() != null) {
+            empleado.setEstado(empleadoDTO.getEstado());
+        }
+        if (empleadoDTO.getIdUsuario() != null) {
+            Optional<Usuario> optionalUsuario = usuarioRepository.findById(empleadoDTO.getIdUsuario());
+
+            if (optionalUsuario.isEmpty()) {
+                return empleado;
+            }
+            Usuario usuario = optionalUsuario.get();
+            empleado.setUsuario(usuario);
+
+        }
+        return empleado;
+    }
+
+    public List<EmpleadoDTO> mapToDTOList(List<Empleado> empleados) {
+        List<EmpleadoDTO> empleadoDTOS = new ArrayList<>();
+
+        for (Empleado empleado : empleados) {
+            EmpleadoDTO empleadoDTO = mapToDTO(empleado, new EmpleadoDTO());
+            empleadoDTOS.add(empleadoDTO);
+        }
+        return empleadoDTOS;
     }
 }

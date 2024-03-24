@@ -18,9 +18,7 @@ import todocode.hackacode.util.NotFoundException;
 
 import java.time.LocalDate;
 import java.time.YearMonth;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 @Service
 @Transactional
@@ -40,7 +38,7 @@ public class VentaServiceImpl implements VentaService {
         this.paqueteRepository = paqueteRepository;
     }
 
-    private VentaDTO mapToDTO(final Venta venta, final VentaDTO ventaDTO) {
+    public VentaDTO mapToDTO(final Venta venta, final VentaDTO ventaDTO) {
         ventaDTO.setId(venta.getId());
         ventaDTO.setMedioPago(venta.getMedioPago());
         ventaDTO.setMonto(venta.getMonto());
@@ -54,7 +52,22 @@ public class VentaServiceImpl implements VentaService {
         return ventaDTO;
     }
 
-    private Venta mapToEntity(final VentaDTO ventaDTO, final Venta venta) {
+    public VentaDTO mapToDTO(final Venta venta) {
+        VentaDTO ventaDTO = new VentaDTO();
+        ventaDTO.setId(venta.getId());
+        ventaDTO.setMedioPago(venta.getMedioPago());
+        ventaDTO.setMonto(venta.getMonto());
+        ventaDTO.setFecha(venta.getFecha());
+        ventaDTO.setEstado(venta.getEstado());
+        ventaDTO.setClienteId(venta.getClienteId() == null ? null : venta.getClienteId().getId());
+        ventaDTO.setEmpleadoid(venta.getEmpleadoid() == null ? null : venta.getEmpleadoid().getId());
+        ventaDTO.setPaquetes(venta.getPaquetes().stream()
+                .map(Paquete::getId)
+                .toList());
+        return ventaDTO;
+    }
+
+    public Venta mapToEntity(final VentaDTO ventaDTO, final Venta venta) {
         venta.setMedioPago(ventaDTO.getMedioPago());
         venta.setMonto(ventaDTO.getMonto());
         venta.setFecha(ventaDTO.getFecha());
@@ -145,4 +158,58 @@ public class VentaServiceImpl implements VentaService {
                 .sum();
     }
 
+    public Venta updateVenta(VentaDTO ventaDTO, Venta venta) {
+        if (ventaDTO == null) {
+            return venta;
+        }
+
+        if (ventaDTO.getMedioPago() != null) {
+            venta.setMedioPago(ventaDTO.getMedioPago());
+        }
+        if (ventaDTO.getMonto() != null) {
+            venta.setMonto(ventaDTO.getMonto());
+        }
+        if (ventaDTO.getFecha() != null) {
+            venta.setFecha(ventaDTO.getFecha());
+        }
+        if (ventaDTO.getEstado() != null) {
+            venta.setEstado(ventaDTO.getEstado());
+        }
+        if (ventaDTO.getId() != null) {
+            venta.setId(ventaDTO.getId());
+        }
+        if (ventaDTO.getClienteId() != null) {
+            Cliente cliente = clienteRepository.findById(ventaDTO.getClienteId())
+                    .orElseThrow(NotFoundException::new);
+            venta.setClienteId(cliente);
+        }
+        if (ventaDTO.getEmpleadoid() != null) {
+            Empleado empleado = empleadoRepository.findById(ventaDTO.getEmpleadoid())
+                    .orElseThrow(NotFoundException::new);
+            venta.setEmpleadoid(empleado);
+        }
+        if (ventaDTO.getPaquetes() != null) {
+            Set<Paquete> paquetes = new HashSet<>();
+            for (Long paqueteId : ventaDTO.getPaquetes()) {
+                Paquete paquete = paqueteRepository.findById(paqueteId)
+                        .orElseThrow(NotFoundException::new);
+                paquetes.add(paquete);
+            }
+            venta.setPaquetes(paquetes);
+        }
+
+        return venta;
+    }
+
+    public List<VentaDTO> mapToDTOList(List<Venta> resultados) {
+        List<VentaDTO> ventaDTOS = new ArrayList<>();
+
+        for (Venta venta : resultados) {
+            VentaDTO ventaDTO = mapToDTO(venta);
+
+            ventaDTOS.add(ventaDTO);
+        }
+
+        return ventaDTOS;
+    }
 }

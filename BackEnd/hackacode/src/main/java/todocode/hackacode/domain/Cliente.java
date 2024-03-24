@@ -1,5 +1,6 @@
 package todocode.hackacode.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -31,6 +32,7 @@ public class Cliente extends Persona {
     private Boolean estado;
 
     @OneToMany(mappedBy = "clienteId")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Set<Venta> ventas;
 
 }
