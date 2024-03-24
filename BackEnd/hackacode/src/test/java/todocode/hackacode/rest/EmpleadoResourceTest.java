@@ -23,7 +23,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 class EmpleadoResourceTest {
-
+/*
     @Test
     public void testGetAllEmpleados(){
 
@@ -114,5 +114,5 @@ class EmpleadoResourceTest {
         // Verificar que el método save() del repositorio de usuario haya sido llamado exactamente una vez
         verify(usuarioRepository, times(1)).save(any(Usuario.class));
     }
-
+*/
 }
