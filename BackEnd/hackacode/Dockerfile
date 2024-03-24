@@ -1,4 +1,4 @@
-FROM openjdk:21-slim
+FROM amazoncorretto:21-alpine-jdk
 
 LABEL author=grupo11.4cod
 
