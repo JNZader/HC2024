@@ -9,6 +9,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Positive;
 import lombok.*;
 
 @Entity
@@ -27,10 +28,13 @@ public class Precio {
     private Long idServico;
 
     @Column(nullable = false)
+    @Positive(message = "El costo debe ser un valor positivo")
     private Double costo;
 
     @Column(nullable = false)
+    @Positive(message = "El precio de venta debe ser un valor positivo")
     private Double precioVenta;
+
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_servicio_id", nullable = false, unique = true)

@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 
 import java.time.LocalDate;
 
+import jakarta.validation.constraints.*;
 import lombok.*;
 
 @Entity
@@ -20,15 +21,20 @@ public class Servicio {
     private Long id;
 
     @Column
+    @Pattern(regexp = "^[a-zA-Záéíóúñü ]+$", message = "El nombre solo puede contener letras y espacios")
     private String nombre;
 
     @Column
+    @Pattern(regexp = "^[a-zA-Záéíóúñü0-9\\-\\., ]+$", message = "La descripcion solo puede " +
+          "contener letras, números, guiones, comas, puntos y espacios")
     private String descripcion;
 
     @Column
+    @PastOrPresent(message = "La fecha debe ser una fecha presente o futura")
     private LocalDate fecha;
 
     @Column
+    @Positive(message = "La duración debe ser un número positivo")
     private Integer duracion;
 
     @Column(nullable = false)
