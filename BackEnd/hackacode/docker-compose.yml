@@ -1,5 +1,14 @@
 version: "3.9"
 services:
+#new app (angular_app)
+#  angular_app:
+#    container_name: angular_app
+#    image: pee-angular_app:1.0.0
+#    build: ./webapp/
+#    ports:
+#      - 4200:4200
+#    depends_on:
+#      - app
   app:
     container_name: "backcontainer"
     build: .
