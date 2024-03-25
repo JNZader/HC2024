@@ -15,6 +15,7 @@ todocode\hackacode\model\PrecioIdServicioUnique.class
 todocode\hackacode\domain\ServicioListener.class
 todocode\hackacode\model\EmpleadoDTO.class
 todocode\hackacode\model\PrecioDTO.class
+todocode\hackacode\config\AngularLocalConfig.class
 todocode\hackacode\repos\VentaRepository.class
 todocode\hackacode\rest\PaqueteResource.class
 todocode\hackacode\domain\Cliente$ClienteBuilder.class
@@ -45,6 +46,7 @@ todocode\hackacode\domain\Cliente.class
 todocode\hackacode\model\VentaDTO.class
 todocode\hackacode\util\ReferencedWarning.class
 todocode\hackacode\rest\VentaResource.class
+todocode\hackacode\config\AngularLocalConfig$1.class
 todocode\hackacode\repos\UsuarioRepository.class
 todocode\hackacode\repos\ClienteRepository.class
 todocode\hackacode\domain\Empleado.class

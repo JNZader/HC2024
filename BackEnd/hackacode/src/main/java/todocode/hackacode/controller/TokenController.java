@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.RestController;
 import todocode.hackacode.model.CambiarPassDTO;
 import todocode.hackacode.model.LoginRequest;
 import todocode.hackacode.model.LoginResponse;
+import todocode.hackacode.model.RecuperarPassDTO;
 import todocode.hackacode.repos.UsuarioRepository;
+import todocode.hackacode.util.Correo;
 import todocode.hackacode.util.TemporaryPasswordException;
 
 import java.time.Instant;
@@ -26,12 +28,14 @@ public class TokenController {
     private final JwtEncoder jwtEncoder;
     private final UsuarioRepository usuarioRepository;
     private final BCryptPasswordEncoder passwordEncoder;
+    private final Correo correo;
 
     @Autowired
-    public TokenController(JwtEncoder jwtEncoder, UsuarioRepository usuarioRepository, BCryptPasswordEncoder passwordEncoder) {
+    public TokenController(JwtEncoder jwtEncoder, UsuarioRepository usuarioRepository, BCryptPasswordEncoder passwordEncoder, Correo correo) {
         this.jwtEncoder = jwtEncoder;
         this.usuarioRepository = usuarioRepository;
         this.passwordEncoder = passwordEncoder;
+       this.correo = correo;
     }
 
     /**
@@ -94,6 +98,23 @@ public class TokenController {
         user.setPassword(passwordEncoder.encode(request.newPass()));
         user.setPassTemporaria(false);
         usuarioRepository.save(user);
+
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/recuperar-pass")
+    public ResponseEntity<Void> recuperarPass(@RequestBody RecuperarPassDTO request) {
+        var user = usuarioRepository.findByUsername(request.usuario()).orElseThrow();
+
+        var contraseniaTemp = correo.generarContraTemp();
+
+
+
+        user.setPassword(passwordEncoder.encode(contraseniaTemp));
+        user.setPassTemporaria(false);
+        usuarioRepository.save(user);
+
+        correo.enviarPassword(request.usuario(),contraseniaTemp);
 
         return ResponseEntity.ok().build();
     }
