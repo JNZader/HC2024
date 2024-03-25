@@ -1,0 +1,10 @@
+todocode.hackacode
+todocode.hackacode.config
+todocode.hackacode.controller
+todocode.hackacode.domain
+todocode.hackacode.model
+todocode.hackacode.repos
+todocode.hackacode.rest
+todocode.hackacode.service
+todocode.hackacode.service.impl
+todocode.hackacode.util
