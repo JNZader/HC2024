@@ -50,7 +50,8 @@ public class SecurityConfig {
                 .requestMatchers("/v3/api-docs", "/swagger-ui/**").permitAll()
                 .requestMatchers(HttpMethod.POST, "/login").permitAll() // Permite el acceso a /login sin autenticación
                 .requestMatchers(HttpMethod.POST, "/crear").permitAll() // Permite el acceso a /crear sin autenticación
-                .requestMatchers(HttpMethod.POST, "/cambiar-pass").permitAll() // Permite el acceso a /cambiar-pass sin autenticación
+                .requestMatchers(HttpMethod.POST, "/cambiar-pass").permitAll() // Permite el acceso a /cambiar-pass sin autenticación.
+                        .requestMatchers(HttpMethod.POST,"/recuperar-pass").permitAll()
                 .anyRequest().authenticated()) // Cualquier otra solicitud requiere autenticación
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults())) // Configura el servidor de recursos OAuth2 con JWT
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Configura la gestión de sesiones como STATELESS
