@@ -17,6 +17,7 @@ import java.time.LocalDate;
 import java.util.Set;
 
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 import todocode.hackacode.model.Medpago;
 
 @Entity
@@ -39,6 +40,7 @@ public class Venta {
     private Double monto;
 
     @Column(nullable = false)
+    @CreationTimestamp
     private LocalDate fecha;
 
     @Column(nullable = false)
