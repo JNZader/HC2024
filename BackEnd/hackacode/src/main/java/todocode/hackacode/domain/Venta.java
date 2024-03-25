@@ -1,18 +1,7 @@
 package todocode.hackacode.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+
 import java.time.LocalDate;
 import java.util.Set;
 
@@ -37,6 +26,7 @@ public class Venta {
     private Medpago medioPago;
 
     @Column
+    @Transient
     private Double monto;
 
     @Column(nullable = false)
@@ -61,5 +51,16 @@ public class Venta {
             inverseJoinColumns = @JoinColumn(name = "paqueteId")
     )
     private Set<Paquete> paquetes;
+
+    @PrePersist
+    public void calcularMontoTotal() {
+        double total = 0.0;
+        if (paquetes != null) {
+            for (Paquete paquete : paquetes) {
+                total += paquete.getPrecioVenta();
+            }
+        }
+        setMonto(total);
+    }
 
 }
