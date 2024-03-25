@@ -16,10 +16,12 @@ todocode\hackacode\domain\ServicioListener.class
 todocode\hackacode\model\EmpleadoDTO.class
 todocode\hackacode\model\PrecioDTO.class
 todocode\hackacode\config\AngularLocalConfig.class
+todocode\hackacode\model\RecuperarPassDTO.class
 todocode\hackacode\repos\VentaRepository.class
 todocode\hackacode\rest\PaqueteResource.class
 todocode\hackacode\domain\Cliente$ClienteBuilder.class
 todocode\hackacode\service\impl\PrecioServiceImpl.class
+todocode\hackacode\config\MailConfig.class
 todocode\hackacode\model\CrearUsuarioDTO.class
 todocode\hackacode\model\TipoPaquete.class
 todocode\hackacode\domain\Persona$PersonaBuilder.class
@@ -30,6 +32,7 @@ todocode\hackacode\domain\Empleado$EmpleadoBuilderImpl.class
 todocode\hackacode\rest\EmpleadoResource.class
 todocode\hackacode\util\ReferencedException.class
 todocode\hackacode\service\VentaService.class
+todocode\hackacode\util\Correo.class
 todocode\hackacode\repos\EmpleadoRepository.class
 todocode\hackacode\config\SwaggerConfig.class
 todocode\hackacode\domain\Persona.class

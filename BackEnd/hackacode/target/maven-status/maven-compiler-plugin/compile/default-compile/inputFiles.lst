@@ -11,6 +11,7 @@ C:\Users\javie\OneDrive\Escritorio\TodoCode\HC2024\BackEnd\hackacode\src\main\ja
 C:\Users\javie\OneDrive\Escritorio\TodoCode\HC2024\BackEnd\hackacode\src\main\java\todocode\hackacode\repos\EmpleadoRepository.java
 C:\Users\javie\OneDrive\Escritorio\TodoCode\HC2024\BackEnd\hackacode\src\main\java\todocode\hackacode\util\ReferencedException.java
 C:\Users\javie\OneDrive\Escritorio\TodoCode\HC2024\BackEnd\hackacode\src\main\java\todocode\hackacode\repos\ServicioRepository.java
+C:\Users\javie\OneDrive\Escritorio\TodoCode\HC2024\BackEnd\hackacode\src\main\java\todocode\hackacode\util\Correo.java
 C:\Users\javie\OneDrive\Escritorio\TodoCode\HC2024\BackEnd\hackacode\src\main\java\todocode\hackacode\repos\UsuarioRepository.java
 C:\Users\javie\OneDrive\Escritorio\TodoCode\HC2024\BackEnd\hackacode\src\main\java\todocode\hackacode\service\impl\PrecioServiceImpl.java
 C:\Users\javie\OneDrive\Escritorio\TodoCode\HC2024\BackEnd\hackacode\src\main\java\todocode\hackacode\rest\VentaResource.java
@@ -25,6 +26,7 @@ C:\Users\javie\OneDrive\Escritorio\TodoCode\HC2024\BackEnd\hackacode\src\main\ja
 C:\Users\javie\OneDrive\Escritorio\TodoCode\HC2024\BackEnd\hackacode\src\main\java\todocode\hackacode\domain\Usuario.java
 C:\Users\javie\OneDrive\Escritorio\TodoCode\HC2024\BackEnd\hackacode\src\main\java\todocode\hackacode\repos\PrecioRepository.java
 C:\Users\javie\OneDrive\Escritorio\TodoCode\HC2024\BackEnd\hackacode\src\main\java\todocode\hackacode\config\AngularLocalConfig.java
+C:\Users\javie\OneDrive\Escritorio\TodoCode\HC2024\BackEnd\hackacode\src\main\java\todocode\hackacode\config\MailConfig.java
 C:\Users\javie\OneDrive\Escritorio\TodoCode\HC2024\BackEnd\hackacode\src\main\java\todocode\hackacode\domain\Paquete.java
 C:\Users\javie\OneDrive\Escritorio\TodoCode\HC2024\BackEnd\hackacode\src\main\java\todocode\hackacode\model\VentaDTO.java
 C:\Users\javie\OneDrive\Escritorio\TodoCode\HC2024\BackEnd\hackacode\src\main\java\todocode\hackacode\util\TemporaryPasswordException.java
@@ -59,3 +61,4 @@ C:\Users\javie\OneDrive\Escritorio\TodoCode\HC2024\BackEnd\hackacode\src\main\ja
 C:\Users\javie\OneDrive\Escritorio\TodoCode\HC2024\BackEnd\hackacode\src\main\java\todocode\hackacode\util\NotFoundException.java
 C:\Users\javie\OneDrive\Escritorio\TodoCode\HC2024\BackEnd\hackacode\src\main\java\todocode\hackacode\controller\TokenController.java
 C:\Users\javie\OneDrive\Escritorio\TodoCode\HC2024\BackEnd\hackacode\src\main\java\todocode\hackacode\service\impl\PaqueteServiceImpl.java
+C:\Users\javie\OneDrive\Escritorio\TodoCode\HC2024\BackEnd\hackacode\src\main\java\todocode\hackacode\model\RecuperarPassDTO.java
